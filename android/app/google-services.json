@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1029322942189",
+    "project_id": "tylunch-9b68a",
+    "storage_bucket": "tylunch-9b68a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029322942189:android:122d45274ea24bf0448ee4",
+        "android_client_info": {
+          "package_name": "com.studioseizh.tylunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029322942189-9b3ejnvsjjoefs19ckbv2g2g4g9psrmu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studioseizh.tylunch",
+            "certificate_hash": "be8f5360ae13763899689accdf838089724b77b7"
+          }
+        },
+        {
+          "client_id": "1029322942189-u2jusf8b22ep9mehggv4s29tlt4hrv58.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studioseizh.tylunch",
+            "certificate_hash": "38caf502b49f6b16014bdc7576a4cf07cb6da35a"
+          }
+        },
+        {
+          "client_id": "1029322942189-487v7dhksnsf7kdfc2o90mkddvfa648v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_UwX0nzAri9V2L1uKSWjWm0eisd4IPas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029322942189-487v7dhksnsf7kdfc2o90mkddvfa648v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1029322942189-gi17aj06aslm9e8r09appap5gtuv8km3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.studioseizh.tylunch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
