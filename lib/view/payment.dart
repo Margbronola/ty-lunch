@@ -1199,8 +1199,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                         ),
                                         const SizedBox(width: 20),
                                         Text(
-                                          // "${loggedUser!.points!.toStringAsFixed(2)}
-                                          "3  €",
+                                          "${loggedUser!.points!.toStringAsFixed(2)} €",
                                           style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.w700,
