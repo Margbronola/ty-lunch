@@ -59,10 +59,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/splashscreen.png',
-              fit: BoxFit.fitWidth,
-            ),
+            Image.asset('assets/images/splashscreen.png', fit: BoxFit.fitWidth),
             const SizedBox(height: 10),
           ],
         ),

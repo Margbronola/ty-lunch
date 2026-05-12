@@ -49,7 +49,8 @@ class _PaymentPageState extends State<PaymentPage> {
     "assets/icons/up-dejeuner.png",
     "assets/icons/bimpli.png",
     "assets/icons/pluxee.png",
-    "assets/icons/edenred.png"
+    "assets/icons/edenred.png",
+    "assets/icons/swile-black.png",
   ];
 
   // "Crédits",
@@ -143,7 +144,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                   width: 34,
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -155,125 +156,133 @@ class _PaymentPageState extends State<PaymentPage> {
                           children: [
                             const SizedBox(height: 20),
                             CustomWidget().title(
-                                t1: "M",
-                                t2: "OYEN DE PAIEMENT",
-                                s1: 35,
-                                s2: 30),
+                              t1: "M",
+                              t2: "OYEN DE PAIEMENT",
+                              s1: 35,
+                              s2: 30,
+                            ),
                             const SizedBox(height: 20),
                             SizedBox(
                               height: 50,
                               width: size.width,
                               child: Center(
                                 child: ListView.separated(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (c, i) {
-                                      return GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              print("INDEXXXX: $i");
-                                              ind = i;
-                                              // if (ind == 1) {
-                                              //   print(
-                                              //       "PAYMENT METHOD: credit points - INDEXX: $ind");
-                                              //   print(
-                                              //       "PAYMENT METHOD: credit points");
-                                              //   for (final NewCart1Model co
-                                              //       in widget.selected) {
-                                              //     checkout = NewCart1Model(
-                                              //       id: DateTime.now()
-                                              //           .millisecondsSinceEpoch,
-                                              //       subTotal: co.subTotal,
-                                              //       paymentMethod:
-                                              //           "credit_points",
-                                              //       clientId: loggedUser!.id,
-                                              //       usePackaging:
-                                              //           co.usePackaging,
-                                              //       items: co.items,
-                                              //     );
-                                              //   }
-                                              //   print(
-                                              //       "TO CHECKOUT ORDERS: $checkout");
-                                              // } else
-                                              if (ind == 0) {
-                                                print("PAYMENT METHOD: bank");
-                                                for (final NewCart1Model co
-                                                    in widget.selected) {
-                                                  checkout = NewCart1Model(
-                                                    id: DateTime.now()
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (c, i) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          print("INDEXXXX: $i");
+                                          ind = i;
+                                          // if (ind == 1) {
+                                          //   print(
+                                          //       "PAYMENT METHOD: credit points - INDEXX: $ind");
+                                          //   print(
+                                          //       "PAYMENT METHOD: credit points");
+                                          //   for (final NewCart1Model co
+                                          //       in widget.selected) {
+                                          //     checkout = NewCart1Model(
+                                          //       id: DateTime.now()
+                                          //           .millisecondsSinceEpoch,
+                                          //       subTotal: co.subTotal,
+                                          //       paymentMethod:
+                                          //           "credit_points",
+                                          //       clientId: loggedUser!.id,
+                                          //       usePackaging:
+                                          //           co.usePackaging,
+                                          //       items: co.items,
+                                          //     );
+                                          //   }
+                                          //   print(
+                                          //       "TO CHECKOUT ORDERS: $checkout");
+                                          // } else
+                                          if (ind == 0) {
+                                            print("PAYMENT METHOD: bank");
+                                            for (final NewCart1Model co
+                                                in widget.selected) {
+                                              checkout = NewCart1Model(
+                                                id:
+                                                    DateTime.now()
                                                         .millisecondsSinceEpoch,
-                                                    subTotal: co.subTotal,
-                                                    paymentMethod:
-                                                        loggedUser!.points ==
-                                                                0.00
-                                                            ? "credit_card"
-                                                            : "card_points",
-                                                    clientId: loggedUser!.id,
-                                                    usePackaging:
-                                                        co.usePackaging,
-                                                    items: co.items,
-                                                  );
-                                                }
-                                                print(
-                                                    "TO CHECKOUT ORDERS: $checkout");
-                                              } else {
-                                                print("PAYMENT METHOD: Conecs");
-                                                for (final NewCart1Model co
-                                                    in widget.selected) {
-                                                  checkout = NewCart1Model(
-                                                    id: DateTime.now()
+                                                subTotal: co.subTotal,
+                                                paymentMethod:
+                                                    loggedUser!.points == 0.00
+                                                        ? "credit_card"
+                                                        : "card_points",
+                                                clientId: loggedUser!.id,
+                                                usePackaging: co.usePackaging,
+                                                items: co.items,
+                                              );
+                                            }
+                                            print(
+                                              "TO CHECKOUT ORDERS: $checkout",
+                                            );
+                                          } else {
+                                            print("PAYMENT METHOD: Conecs");
+                                            for (final NewCart1Model co
+                                                in widget.selected) {
+                                              checkout = NewCart1Model(
+                                                id:
+                                                    DateTime.now()
                                                         .millisecondsSinceEpoch,
-                                                    subTotal: co.subTotal,
-                                                    paymentMethod: "coneccs",
-                                                    clientId: loggedUser!.id,
-                                                    usePackaging:
-                                                        co.usePackaging,
-                                                    items: co.items,
-                                                  );
-                                                }
-                                                print(
-                                                    "TO CHECKOUT ORDERS: $checkout");
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                            width: size.width * .4,
-                                            // 150,
-                                            height: 55,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(90),
-                                              border: Border.all(
-                                                  color: ind == i
-                                                      ? kcPrimary
-                                                      : Colors.black),
-                                              color: ind == i
+                                                subTotal: co.subTotal,
+                                                paymentMethod: "coneccs",
+                                                clientId: loggedUser!.id,
+                                                usePackaging: co.usePackaging,
+                                                items: co.items,
+                                              );
+                                            }
+                                            print(
+                                              "TO CHECKOUT ORDERS: $checkout",
+                                            );
+                                          }
+                                        });
+                                      },
+                                      child: Container(
+                                        width: size.width * .4,
+                                        // 150,
+                                        height: 55,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            90,
+                                          ),
+                                          border: Border.all(
+                                            color:
+                                                ind == i
+                                                    ? kcPrimary
+                                                    : Colors.black,
+                                          ),
+                                          color:
+                                              ind == i
                                                   ? kcPrimary
                                                   : Colors.white,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                options[i],
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      // options[i] == options[1]
-                                                      //     ? 12 :
-                                                      14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: ind == i
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            options[i],
+                                            style: TextStyle(
+                                              fontSize:
+                                                  // options[i] == options[1]
+                                                  //     ? 12 :
+                                                  14,
+                                              fontWeight: FontWeight.w600,
+                                              color:
+                                                  ind == i
                                                       ? Colors.white
                                                       : Colors.black,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
                                             ),
-                                          ));
-                                    },
-                                    separatorBuilder: (_, __) =>
-                                        const SizedBox(width: 5),
-                                    itemCount: options.length),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (_, __) => const SizedBox(width: 5),
+                                  itemCount: options.length,
+                                ),
                               ),
                             ),
 
@@ -632,192 +641,204 @@ class _PaymentPageState extends State<PaymentPage> {
                             //     :
                             ind == 0
                                 ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Crédit disponible",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          "Crédit disponible",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                          const SizedBox(width: 20),
-                                          Text(
-                                            "${loggedUser!.points!.toStringAsFixed(2)} €",
-                                            style: const TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.w700,
-                                              color: kcPrimary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      const Text(
-                                        "Cartes acceptées",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
                                         ),
+                                        const SizedBox(width: 20),
+                                        Text(
+                                          "${loggedUser!.points!.toStringAsFixed(2)} €",
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w700,
+                                            color: kcPrimary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      "Cartes acceptées",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
                                       ),
-                                      const SizedBox(height: 10),
-                                      Center(
-                                        child: Wrap(
-                                          children: [
-                                            ...images.map((e) {
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(3),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Container(
-                                                    width: 100,
-                                                    height: 70,
-                                                    color: const Color.fromARGB(
-                                                        255, 245, 245, 245),
-                                                    child: Center(
-                                                      child: Image.asset(e),
-                                                    ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: Wrap(
+                                        children: [
+                                          ...images.map((e) {
+                                            return Padding(
+                                              padding: const EdgeInsets.all(3),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 70,
+                                                  color: const Color.fromARGB(
+                                                    255,
+                                                    245,
+                                                    245,
+                                                    245,
+                                                  ),
+                                                  child: Center(
+                                                    child: Image.asset(e),
                                                   ),
                                                 ),
-                                              );
-                                            }),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 30),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: Checkbox(
-                                              activeColor: kcPrimary,
-                                              checkColor: Colors.white,
-                                              value: _selected,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
                                               ),
-                                              side: MaterialStateBorderSide
-                                                  .resolveWith(
-                                                (states) => const BorderSide(
-                                                    width: 1, color: kcPrimary),
-                                              ),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  value == true
-                                                      ? print("selected")
-                                                      : print("unselect");
-                                                  _selected = value!;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Expanded(
-                                            child: RichText(
-                                              text: TextSpan(
-                                                text: 'J’accepte les ',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w800,
-                                                ),
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        "Conditions Générales de Vente",
-                                                    style: const TextStyle(
-                                                      color: kcPrimary,
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                    ),
-                                                    recognizer:
-                                                        TapGestureRecognizer()
-                                                          ..onTap = (() {
-                                                            _launchUrl();
-                                                          }),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                            );
+                                          }),
                                         ],
                                       ),
-                                      const SizedBox(height: 30),
-                                      Center(
-                                        child: SizedBox(
-                                          height: 55,
-                                          width: 200,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  _selected == false
-                                                      ? Colors.grey
-                                                      : kcPrimary,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(90),
-                                              ),
+                                    ),
+                                    const SizedBox(height: 30),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: Checkbox(
+                                            activeColor: kcPrimary,
+                                            checkColor: Colors.white,
+                                            value: _selected,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
-                                            onPressed: _selected == false
-                                                ? () {
+                                            side:
+                                                MaterialStateBorderSide.resolveWith(
+                                                  (states) => const BorderSide(
+                                                    width: 1,
+                                                    color: kcPrimary,
+                                                  ),
+                                                ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                value == true
+                                                    ? print("selected")
+                                                    : print("unselect");
+                                                _selected = value!;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: 'J’accepte les ',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text:
+                                                      "Conditions Générales de Vente",
+                                                  style: const TextStyle(
+                                                    color: kcPrimary,
+                                                    decoration:
+                                                        TextDecoration
+                                                            .underline,
+                                                  ),
+                                                  recognizer:
+                                                      TapGestureRecognizer()
+                                                        ..onTap = (() {
+                                                          _launchUrl();
+                                                        }),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 30),
+                                    Center(
+                                      child: SizedBox(
+                                        height: 55,
+                                        width: 200,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                _selected == false
+                                                    ? Colors.grey
+                                                    : kcPrimary,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(90),
+                                            ),
+                                          ),
+                                          onPressed:
+                                              _selected == false
+                                                  ? () {
                                                     print(
-                                                        "need to accept conditions");
+                                                      "need to accept conditions",
+                                                    );
                                                     Fluttertoast.showToast(
-                                                        msg:
-                                                            "accepter les conditions générales de vente");
+                                                      msg:
+                                                          "accepter les conditions générales de vente",
+                                                    );
                                                   }
-                                                : () async {
+                                                  : () async {
                                                     loggedUser!.points !=
                                                                 0.00 &&
                                                             greater == false
                                                         ? await payment
                                                             .payWithPoints(
-                                                                data: checkout,
-                                                                ncdata:
-                                                                    widget.cart)
-                                                            .whenComplete(
-                                                            () {
-                                                              MyDialog()
-                                                                  .scaleDialog(
+                                                              data: checkout,
+                                                              ncdata:
+                                                                  widget.cart,
+                                                            )
+                                                            .whenComplete(() {
+                                                              MyDialog().scaleDialog(
                                                                 context,
                                                                 child: Material(
-                                                                  color: Colors
-                                                                      .transparent,
+                                                                  color:
+                                                                      Colors
+                                                                          .transparent,
                                                                   elevation: 0,
-                                                                  child:
-                                                                      Container(
+                                                                  child: Container(
                                                                     width: 300,
                                                                     height: 350,
-                                                                    decoration:
-                                                                        const BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .only(
+                                                                    decoration: const BoxDecoration(
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                      borderRadius: BorderRadius.only(
                                                                         topLeft:
-                                                                            Radius.circular(5),
+                                                                            Radius.circular(
+                                                                              5,
+                                                                            ),
                                                                         topRight:
-                                                                            Radius.circular(5),
+                                                                            Radius.circular(
+                                                                              5,
+                                                                            ),
                                                                         bottomLeft:
-                                                                            Radius.circular(10),
+                                                                            Radius.circular(
+                                                                              10,
+                                                                            ),
                                                                         bottomRight:
-                                                                            Radius.circular(10),
+                                                                            Radius.circular(
+                                                                              10,
+                                                                            ),
                                                                       ),
                                                                     ),
                                                                   ),
                                                                 ),
                                                               );
-                                                            },
-                                                          )
+                                                            })
                                                         // : loggedUser!.points !=
                                                         //             0.00 &&
                                                         //         greater == true
@@ -948,550 +969,610 @@ class _PaymentPageState extends State<PaymentPage> {
                                                         //           }
                                                         //         },
                                                         //       )
-                                                        : await payment
-                                                            .payWithBank(
-                                                                data: checkout)
-                                                            .then((value) {
-                                                            if (value != null) {
+                                                        : await payment.payWithBank(data: checkout).then((
+                                                          value,
+                                                        ) {
+                                                          if (value != null) {
+                                                            print(
+                                                              "HTML DOCUMENTS",
+                                                            );
+                                                            if (value.contains(
+                                                                  "not_enough_quantity",
+                                                                ) ||
+                                                                value.contains(
+                                                                  "false",
+                                                                )) {
                                                               print(
-                                                                  "HTML DOCUMENTS");
-                                                              if (value.contains(
-                                                                      "not_enough_quantity") ||
-                                                                  value.contains(
-                                                                      "false")) {
+                                                                "PAY WITH BANK: $value",
+                                                              );
+                                                              for (NewCartModel
+                                                                  newcart
+                                                                  in widget
+                                                                      .cart) {
                                                                 print(
-                                                                    "PAY WITH BANK: $value");
-                                                                for (NewCartModel newcart
-                                                                    in widget
-                                                                        .cart) {
+                                                                  "sumulod sine na condition",
+                                                                );
+                                                                for (CartProduct
+                                                                    cp
+                                                                    in newcart
+                                                                        .products) {
                                                                   print(
-                                                                      "sumulod sine na condition");
-                                                                  for (CartProduct cp
-                                                                      in newcart
-                                                                          .products) {
+                                                                    "sumulod sine na condition 1",
+                                                                  );
+                                                                  if (value.contains(
+                                                                    cp.productId
+                                                                        .toString(),
+                                                                  )) {
                                                                     print(
-                                                                        "sumulod sine na condition 1");
-                                                                    if (value.contains(cp
-                                                                        .productId
-                                                                        .toString())) {
-                                                                      print(
-                                                                          "sumulod sine na condition 2");
-                                                                      print(
-                                                                          "PRODUCT ID: ${cp.productId} = $value");
-                                                                      outOfStockProduct =
-                                                                          cp.name;
-                                                                    }
+                                                                      "sumulod sine na condition 2",
+                                                                    );
+                                                                    print(
+                                                                      "PRODUCT ID: ${cp.productId} = $value",
+                                                                    );
+                                                                    outOfStockProduct =
+                                                                        cp.name;
                                                                   }
                                                                 }
-                                                                MyDialog()
-                                                                    .scaleDialog(
-                                                                  context,
-                                                                  child:
-                                                                      Material(
-                                                                    color: Colors
-                                                                        .transparent,
-                                                                    elevation:
-                                                                        0,
-                                                                    child:
-                                                                        Container(
-                                                                      width: double
-                                                                          .infinity,
-                                                                      height: double
-                                                                          .infinity,
-                                                                      decoration:
-                                                                          const BoxDecoration(
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            30),
-                                                                        child:
-                                                                            Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            const SizedBox(height: 20),
-                                                                            Center(
-                                                                              child: Text(
-                                                                                "Pas assez de quantité pour: $outOfStockProduct",
-                                                                                textAlign: TextAlign.center,
-                                                                                style: const TextStyle(fontSize: 18, color: kcPrimary),
-                                                                              ),
-                                                                            ),
-                                                                            const SizedBox(height: 40),
-                                                                            Container(
-                                                                              height: 55,
-                                                                              width: 300,
-                                                                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                                              child: ElevatedButton(
-                                                                                style: ElevatedButton.styleFrom(
-                                                                                  backgroundColor: kcPrimary,
-                                                                                  shape: RoundedRectangleBorder(
-                                                                                    borderRadius: BorderRadius.circular(90),
-                                                                                  ),
-                                                                                ),
-                                                                                onPressed: () {
-                                                                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LandingPage(ind: 2)), (Route<dynamic> route) => false);
-                                                                                },
-                                                                                child: Text(
-                                                                                  "annuler".toUpperCase(),
-                                                                                  style: const TextStyle(
-                                                                                    color: Colors.white,
-                                                                                    fontSize: 14,
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              } else {
-                                                                debugPrint(
-                                                                    "RETURN FROM PAYMENT: $value");
-                                                                var document =
-                                                                    parse(
-                                                                        value);
-                                                                debugPrint(
-                                                                    "HTML DOC : ${document.outerHtml}");
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            WebViewPage(
-                                                                      htmlpage:
-                                                                          document
-                                                                              .outerHtml,
-                                                                      cart: widget
-                                                                          .cart,
-                                                                      selectedconnecs:
-                                                                          selectedConnects,
-                                                                    ),
-                                                                  ),
-                                                                );
                                                               }
-                                                            }
-                                                          });
-                                                  },
-                                            child: const Text(
-                                              "CONFIRMER",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 55,
-                                        width: size.width,
-                                        margin:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: MaterialButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text(
-                                            "ANNULER",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Pour utiliser votre titre-restaurant, le panier doit être inférieur ou égal à la limite de plafond journalier d’utilisation des titres-restaurant définie par la législation.",
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Crédit disponible",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 20),
-                                          Text(
-                                            "${loggedUser!.points!.toStringAsFixed(2)} €",
-                                            style: const TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.w700,
-                                              color: kcPrimary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      const Text(
-                                        "Sélectionnez votre titre-restaurant parmi les cartes acceptées",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Center(
-                                        child: Wrap(
-                                          children: [
-                                            ...conecsimages.map((e) {
-                                              final int index1 =
-                                                  conecsimages.indexOf(e);
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    conecsIndex = index1;
-                                                    if (index1 == 0) {
-                                                      selectedConnects =
-                                                          "UPCHEQUDEJ";
-                                                      print(
-                                                          "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects");
-                                                    } else if (index1 == 1) {
-                                                      selectedConnects =
-                                                          "APETIZ";
-                                                      print(
-                                                          "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects");
-                                                    } else if (index1 == 2) {
-                                                      selectedConnects =
-                                                          "SODEXO";
-                                                      print(
-                                                          "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects");
-                                                    } else {
-                                                      selectedConnects =
-                                                          "edenred";
-                                                      print(
-                                                          "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects");
-                                                    }
-                                                  });
-                                                },
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Container(
-                                                        width: 110,
-                                                        height: 70,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5),
-                                                        color: conecsIndex ==
-                                                                index1
-                                                            ? kcPrimary
-                                                            : const Color
-                                                                .fromARGB(255,
-                                                                245, 245, 245),
-                                                        child: Center(
-                                                          child: Image.asset(e),
-                                                        )),
-                                                  ),
-                                                ),
-                                              );
-                                            }),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 30),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: Checkbox(
-                                              activeColor: kcPrimary,
-                                              checkColor: Colors.white,
-                                              value: _selected2,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                              ),
-                                              side: MaterialStateBorderSide
-                                                  .resolveWith(
-                                                (states) => const BorderSide(
-                                                    width: 1, color: kcPrimary),
-                                              ),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  value == true
-                                                      ? print("selected")
-                                                      : print("unselect");
-                                                  _selected2 = value!;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Expanded(
-                                            child: RichText(
-                                              text: TextSpan(
-                                                text: 'J’accepte les ',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w800,
-                                                ),
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        "Conditions Générales de Vente",
-                                                    style: const TextStyle(
-                                                      color: kcPrimary,
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                    ),
-                                                    recognizer:
-                                                        TapGestureRecognizer()
-                                                          ..onTap = (() {
-                                                            _launchUrl();
-                                                          }),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 30),
-                                      Center(
-                                        child: SizedBox(
-                                          height: 55,
-                                          width: 200,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  _selected2 == false ||
-                                                          conecsIndex == null
-                                                      ? Colors.grey
-                                                      : kcPrimary,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(90),
-                                              ),
-                                            ),
-                                            onPressed: () async {
-                                              if (_selected2 == false) {
-                                                print(
-                                                    "need to accept conditions");
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                        "accepter les conditions générales de vente");
-                                              } else if (conecsIndex == null) {
-                                                print("need to select cards");
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                        "choisissez parmi les cartes acceptées");
-                                              } else {
-                                                await payment
-                                                    .payWithConecs(
-                                                        data: checkout,
-                                                        selectedConnects:
-                                                            selectedConnects)
-                                                    .then(
-                                                  (value) {
-                                                    if (value != null) {
-                                                      print("HTML DOCUMENTS");
-                                                      print(
-                                                          "PAY WITH CONNECS: $value");
-                                                      if (value.contains(
-                                                              "not_enough_quantity") ||
-                                                          value.contains(
-                                                              "false")) {
-                                                        for (NewCartModel newcart
-                                                            in widget.cart) {
-                                                          print(
-                                                              "sumulod sine na condition");
-                                                          for (CartProduct cp
-                                                              in newcart
-                                                                  .products) {
-                                                            print(
-                                                                "sumulod sine na condition 1");
-                                                            if (value.contains(cp
-                                                                .productId
-                                                                .toString())) {
-                                                              print(
-                                                                  "sumulod sine na condition 2");
-                                                              print(
-                                                                  "PRODUCT ID: ${cp.productId} = $value");
-                                                              outOfStockProduct =
-                                                                  cp.name;
+                                                              MyDialog().scaleDialog(
+                                                                context,
+                                                                child: Material(
+                                                                  color:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  elevation: 0,
+                                                                  child: Container(
+                                                                    width:
+                                                                        double
+                                                                            .infinity,
+                                                                    height:
+                                                                        double
+                                                                            .infinity,
+                                                                    decoration:
+                                                                        const BoxDecoration(
+                                                                          color:
+                                                                              Colors.white,
+                                                                        ),
+                                                                    child: Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                            30,
+                                                                          ),
+                                                                      child: Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          const SizedBox(
+                                                                            height:
+                                                                                20,
+                                                                          ),
+                                                                          Center(
+                                                                            child: Text(
+                                                                              "Pas assez de quantité pour: $outOfStockProduct",
+                                                                              textAlign:
+                                                                                  TextAlign.center,
+                                                                              style: const TextStyle(
+                                                                                fontSize:
+                                                                                    18,
+                                                                                color:
+                                                                                    kcPrimary,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            height:
+                                                                                40,
+                                                                          ),
+                                                                          Container(
+                                                                            height:
+                                                                                55,
+                                                                            width:
+                                                                                300,
+                                                                            padding: const EdgeInsets.symmetric(
+                                                                              horizontal:
+                                                                                  20,
+                                                                            ),
+                                                                            child: ElevatedButton(
+                                                                              style: ElevatedButton.styleFrom(
+                                                                                backgroundColor:
+                                                                                    kcPrimary,
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(
+                                                                                    90,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              onPressed: () {
+                                                                                Navigator.pushAndRemoveUntil(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                    builder:
+                                                                                        (
+                                                                                          context,
+                                                                                        ) => LandingPage(
+                                                                                          ind:
+                                                                                              2,
+                                                                                        ),
+                                                                                  ),
+                                                                                  (
+                                                                                    Route<
+                                                                                      dynamic
+                                                                                    >
+                                                                                    route,
+                                                                                  ) =>
+                                                                                      false,
+                                                                                );
+                                                                              },
+                                                                              child: Text(
+                                                                                "annuler".toUpperCase(),
+                                                                                style: const TextStyle(
+                                                                                  color:
+                                                                                      Colors.white,
+                                                                                  fontSize:
+                                                                                      14,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            } else {
+                                                              debugPrint(
+                                                                "RETURN FROM PAYMENT: $value",
+                                                              );
+                                                              var document =
+                                                                  parse(value);
+                                                              debugPrint(
+                                                                "HTML DOC : ${document.outerHtml}",
+                                                              );
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (
+                                                                        context,
+                                                                      ) => WebViewPage(
+                                                                        htmlpage:
+                                                                            document.outerHtml,
+                                                                        cart:
+                                                                            widget.cart,
+                                                                        selectedconnecs:
+                                                                            selectedConnects,
+                                                                      ),
+                                                                ),
+                                                              );
                                                             }
                                                           }
-                                                        }
-                                                        MyDialog().scaleDialog(
-                                                          context,
-                                                          child: Material(
-                                                            color: Colors
-                                                                .transparent,
-                                                            elevation: 0,
-                                                            child: Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              height: double
-                                                                  .infinity,
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        30),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            20),
-                                                                    Center(
-                                                                      child:
-                                                                          Text(
-                                                                        "Pas assez de quantité pour: $outOfStockProduct",
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: const TextStyle(
-                                                                            fontSize:
-                                                                                18,
-                                                                            color:
-                                                                                kcPrimary),
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            40),
-                                                                    Container(
-                                                                      height:
-                                                                          55,
-                                                                      width:
-                                                                          300,
-                                                                      padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                          horizontal:
-                                                                              20),
-                                                                      child:
-                                                                          ElevatedButton(
-                                                                        style: ElevatedButton
-                                                                            .styleFrom(
-                                                                          backgroundColor:
-                                                                              kcPrimary,
-                                                                          shape:
-                                                                              RoundedRectangleBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(90),
-                                                                          ),
-                                                                        ),
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.pushAndRemoveUntil(
-                                                                              context,
-                                                                              MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
-                                                                              (Route<dynamic> route) => false);
-                                                                        },
-                                                                        child:
-                                                                            Text(
-                                                                          "annuler"
-                                                                              .toUpperCase(),
-                                                                          style:
-                                                                              const TextStyle(
-                                                                            color:
-                                                                                Colors.white,
-                                                                            fontSize:
-                                                                                14,
-                                                                            // fontWeight: FontWeight.w800,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      } else {
-                                                        print("HTML DOCUMENTS");
-                                                        debugPrint(
-                                                            "RETURN FROM PAYMENT: $value");
-                                                        var document =
-                                                            parse(value);
-                                                        debugPrint(
-                                                            "HTML DOC : ${document.outerHtml}");
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    WebViewPage(
-                                                              htmlpage: document
-                                                                  .outerHtml,
-                                                              cart: widget.cart,
-                                                              selectedconnecs:
-                                                                  selectedConnects,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
-                                                    }
+                                                        });
                                                   },
-                                                );
-                                              }
-                                            },
-                                            child: const Text(
-                                              "CONFIRMER",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 55,
-                                        width: size.width,
-                                        margin:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: MaterialButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
                                           child: const Text(
-                                            "ANNULER",
+                                            "CONFIRMER",
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Colors.white,
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  )
+                                    ),
+                                    Container(
+                                      height: 55,
+                                      width: size.width,
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "ANNULER",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                                : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Pour utiliser votre titre-restaurant, le panier doit être inférieur ou égal à la limite de plafond journalier d’utilisation des titres-restaurant définie par la législation.",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          "Crédit disponible",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Text(
+                                          // "${loggedUser!.points!.toStringAsFixed(2)}
+                                          "3  €",
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w700,
+                                            color: kcPrimary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      "Sélectionnez votre titre-restaurant parmi les cartes acceptées",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: Wrap(
+                                        children: [
+                                          ...conecsimages.map((e) {
+                                            final int index1 = conecsimages
+                                                .indexOf(e);
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  conecsIndex = index1;
+                                                  if (index1 == 0) {
+                                                    selectedConnects =
+                                                        "UPCHEQUDEJ";
+                                                    print(
+                                                      "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects",
+                                                    );
+                                                  } else if (index1 == 1) {
+                                                    selectedConnects = "APETIZ";
+                                                    print(
+                                                      "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects",
+                                                    );
+                                                  } else if (index1 == 2) {
+                                                    selectedConnects = "SODEXO";
+                                                    print(
+                                                      "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects",
+                                                    );
+                                                  } else if (index1 == 3) {
+                                                    selectedConnects =
+                                                        "edenred";
+                                                    print(
+                                                      "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects",
+                                                    );
+                                                  } else {
+                                                    selectedConnects = "swile";
+                                                    print(
+                                                      "INDEXX1 CODE: $index1  - SELECTED CONNECS: $selectedConnects",
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  5,
+                                                ),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Container(
+                                                    width: 110,
+                                                    height: 70,
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    color:
+                                                        conecsIndex == index1
+                                                            ? kcPrimary
+                                                            : const Color.fromARGB(
+                                                              255,
+                                                              245,
+                                                              245,
+                                                              245,
+                                                            ),
+                                                    child: Center(
+                                                      child: Image.asset(e),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 30),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: Checkbox(
+                                            activeColor: kcPrimary,
+                                            checkColor: Colors.white,
+                                            value: _selected2,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            side:
+                                                MaterialStateBorderSide.resolveWith(
+                                                  (states) => const BorderSide(
+                                                    width: 1,
+                                                    color: kcPrimary,
+                                                  ),
+                                                ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                value == true
+                                                    ? print("selected")
+                                                    : print("unselect");
+                                                _selected2 = value!;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: 'J’accepte les ',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text:
+                                                      "Conditions Générales de Vente",
+                                                  style: const TextStyle(
+                                                    color: kcPrimary,
+                                                    decoration:
+                                                        TextDecoration
+                                                            .underline,
+                                                  ),
+                                                  recognizer:
+                                                      TapGestureRecognizer()
+                                                        ..onTap = (() {
+                                                          _launchUrl();
+                                                        }),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 30),
+                                    Center(
+                                      child: SizedBox(
+                                        height: 55,
+                                        width: 200,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                _selected2 == false ||
+                                                        conecsIndex == null
+                                                    ? Colors.grey
+                                                    : kcPrimary,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(90),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            //   if (_selected2 == false) {
+                                            //     print(
+                                            //         "need to accept conditions");
+                                            //     Fluttertoast.showToast(
+                                            //         msg:
+                                            //             "accepter les conditions générales de vente");
+                                            //   } else if (conecsIndex == null) {
+                                            //     print("need to select cards");
+                                            //     Fluttertoast.showToast(
+                                            //         msg:
+                                            //             "choisissez parmi les cartes acceptées");
+                                            //   } else {
+                                            //     await payment
+                                            //         .payWithConecs(
+                                            //             data: checkout,
+                                            //             selectedConnects:
+                                            //                 selectedConnects)
+                                            //         .then(
+                                            //       (value) {
+                                            //         if (value != null) {
+                                            //           print("HTML DOCUMENTS");
+                                            //           print(
+                                            //               "PAY WITH CONNECS: $value");
+                                            //           if (value.contains(
+                                            //                   "not_enough_quantity") ||
+                                            //               value.contains(
+                                            //                   "false")) {
+                                            //             for (NewCartModel newcart
+                                            //                 in widget.cart) {
+                                            //               print(
+                                            //                   "sumulod sine na condition");
+                                            //               for (CartProduct cp
+                                            //                   in newcart
+                                            //                       .products) {
+                                            //                 print(
+                                            //                     "sumulod sine na condition 1");
+                                            //                 if (value.contains(cp
+                                            //                     .productId
+                                            //                     .toString())) {
+                                            //                   print(
+                                            //                       "sumulod sine na condition 2");
+                                            //                   print(
+                                            //                       "PRODUCT ID: ${cp.productId} = $value");
+                                            //                   outOfStockProduct =
+                                            //                       cp.name;
+                                            //                 }
+                                            //               }
+                                            //             }
+                                            //             MyDialog().scaleDialog(
+                                            //               context,
+                                            //               child: Material(
+                                            //                 color: Colors
+                                            //                     .transparent,
+                                            //                 elevation: 0,
+                                            //                 child: Container(
+                                            //                   width: double
+                                            //                       .infinity,
+                                            //                   height: double
+                                            //                       .infinity,
+                                            //                   decoration:
+                                            //                       const BoxDecoration(
+                                            //                     color: Colors
+                                            //                         .white,
+                                            //                   ),
+                                            //                   child: Padding(
+                                            //                     padding:
+                                            //                         const EdgeInsets
+                                            //                             .all(
+                                            //                             30),
+                                            //                     child: Column(
+                                            //                       mainAxisAlignment:
+                                            //                           MainAxisAlignment
+                                            //                               .center,
+                                            //                       children: [
+                                            //                         const SizedBox(
+                                            //                             height:
+                                            //                                 20),
+                                            //                         Center(
+                                            //                           child:
+                                            //                               Text(
+                                            //                             "Pas assez de quantité pour: $outOfStockProduct",
+                                            //                             textAlign:
+                                            //                                 TextAlign.center,
+                                            //                             style: const TextStyle(
+                                            //                                 fontSize:
+                                            //                                     18,
+                                            //                                 color:
+                                            //                                     kcPrimary),
+                                            //                           ),
+                                            //                         ),
+                                            //                         const SizedBox(
+                                            //                             height:
+                                            //                                 40),
+                                            //                         Container(
+                                            //                           height:
+                                            //                               55,
+                                            //                           width:
+                                            //                               300,
+                                            //                           padding: const EdgeInsets
+                                            //                               .symmetric(
+                                            //                               horizontal:
+                                            //                                   20),
+                                            //                           child:
+                                            //                               ElevatedButton(
+                                            //                             style: ElevatedButton
+                                            //                                 .styleFrom(
+                                            //                               backgroundColor:
+                                            //                                   kcPrimary,
+                                            //                               shape:
+                                            //                                   RoundedRectangleBorder(
+                                            //                                 borderRadius:
+                                            //                                     BorderRadius.circular(90),
+                                            //                               ),
+                                            //                             ),
+                                            //                             onPressed:
+                                            //                                 () {
+                                            //                               Navigator.pushAndRemoveUntil(
+                                            //                                   context,
+                                            //                                   MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
+                                            //                                   (Route<dynamic> route) => false);
+                                            //                             },
+                                            //                             child:
+                                            //                                 Text(
+                                            //                               "annuler"
+                                            //                                   .toUpperCase(),
+                                            //                               style:
+                                            //                                   const TextStyle(
+                                            //                                 color:
+                                            //                                     Colors.white,
+                                            //                                 fontSize:
+                                            //                                     14,
+                                            //                                 // fontWeight: FontWeight.w800,
+                                            //                               ),
+                                            //                             ),
+                                            //                           ),
+                                            //                         ),
+                                            //                       ],
+                                            //                     ),
+                                            //                   ),
+                                            //                 ),
+                                            //               ),
+                                            //             );
+                                            //           } else {
+                                            //             print("HTML DOCUMENTS");
+                                            //             debugPrint(
+                                            //                 "RETURN FROM PAYMENT: $value");
+                                            //             var document =
+                                            //                 parse(value);
+                                            //             debugPrint(
+                                            //                 "HTML DOC : ${document.outerHtml}");
+                                            //             Navigator.push(
+                                            //               context,
+                                            //               MaterialPageRoute(
+                                            //                 builder:
+                                            //                     (context) =>
+                                            //                         WebViewPage(
+                                            //                   htmlpage: document
+                                            //                       .outerHtml,
+                                            //                   cart: widget.cart,
+                                            //                   selectedconnecs:
+                                            //                       selectedConnects,
+                                            //                 ),
+                                            //               ),
+                                            //             );
+                                            //           }
+                                            //         }
+                                            //       },
+                                            //     );
+                                            //   }
+                                          },
+                                          child: const Text(
+                                            "CONFIRMER",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 55,
+                                      width: size.width,
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "ANNULER",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                             //  Column(
                             //     crossAxisAlignment:
                             //         CrossAxisAlignment.start,
@@ -1789,7 +1870,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                 ),
               ),
-              isloading ? CustomWidget().loader() : Container()
+              isloading ? CustomWidget().loader() : Container(),
             ],
           ),
         ),

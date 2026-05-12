@@ -60,7 +60,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     selectedIndex = widget.ind;
-    print(selectedIndex);
+    print("SELECTED INDEX: $selectedIndex");
     _controller = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await init();
@@ -138,11 +138,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     if (loggedUser == null) {
-      return Scaffold(
-        body: Center(
-          child: CustomWidget().loader(),
-        ),
-      );
+      return Scaffold(body: Center(child: CustomWidget().loader()));
     } else {
       return Scaffold(
         body: PageView.builder(
@@ -150,61 +146,66 @@ class _LandingPageState extends State<LandingPage> {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (_, i) => _pages[selectedIndex],
         ),
-        bottomNavigationBar: loggedUser == null
-            ? null
-            : Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30.0),
-                    topLeft: Radius.circular(30.0),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      spreadRadius: 5,
-                      blurRadius: 5,
-                    )
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
-                  child: BottomNavigationBar(
-                    selectedItemColor: kcPrimary,
-                    unselectedItemColor: secondaryColor,
-                    selectedFontSize: 12,
-                    showUnselectedLabels: true,
-                    selectedLabelStyle: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600),
-                    unselectedLabelStyle: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600),
-                    items: <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                        icon: SvgPicture.asset(
-                          "assets/icons/menu.svg",
-                          color: secondaryColor,
-                        ),
-                        label: 'Menus',
+        bottomNavigationBar:
+            loggedUser == null
+                ? null
+                : Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30.0),
+                      topLeft: Radius.circular(30.0),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        spreadRadius: 5,
+                        blurRadius: 5,
                       ),
-                      BottomNavigationBarItem(
-                        icon: SvgPicture.asset(
-                          "assets/icons/user.svg",
-                          color: secondaryColor,
-                        ),
-                        label: 'Profil',
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                    child: BottomNavigationBar(
+                      selectedItemColor: kcPrimary,
+                      unselectedItemColor: secondaryColor,
+                      selectedFontSize: 12,
+                      showUnselectedLabels: true,
+                      selectedLabelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
-                      BottomNavigationBarItem(
-                        icon: SizedBox(
-                          width: 30,
-                          child: Stack(
-                            children: [
-                              SvgPicture.asset("assets/icons/cart.svg"),
-                              Positioned(
-                                right: 0,
-                                top: 0,
-                                child: SizedBox(
+                      unselectedLabelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      items: <BottomNavigationBarItem>[
+                        BottomNavigationBarItem(
+                          icon: SvgPicture.asset(
+                            "assets/icons/menu.svg",
+                            color: secondaryColor,
+                          ),
+                          label: 'Menus',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: SvgPicture.asset(
+                            "assets/icons/user.svg",
+                            color: secondaryColor,
+                          ),
+                          label: 'Profil',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: SizedBox(
+                            width: 30,
+                            child: Stack(
+                              children: [
+                                SvgPicture.asset("assets/icons/cart.svg"),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: SizedBox(
                                     height: 17,
                                     width: 17,
                                     child: StreamBuilder<List<NewCartModel>>(
@@ -216,8 +217,9 @@ class _LandingPageState extends State<LandingPage> {
                                             final List<NewCartModel> result =
                                                 snapshot.data!;
                                             final int cartLength =
-                                                getCartLength()
-                                                    .getLength(result);
+                                                getCartLength().getLength(
+                                                  result,
+                                                );
                                             return Container(
                                               width: 22,
                                               height: 22,
@@ -237,28 +239,28 @@ class _LandingPageState extends State<LandingPage> {
                                         }
                                         return Container();
                                       },
-                                    )
-                                    // CustomWidget().cartQty(),
                                     ),
-                              )
-                            ],
+                                    // CustomWidget().cartQty(),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+                          label: 'Mon Panier',
                         ),
-                        label: 'Mon Panier',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: SvgPicture.asset(
-                          "assets/icons/ty.svg",
-                          color: secondaryColor,
+                        BottomNavigationBarItem(
+                          icon: SvgPicture.asset(
+                            "assets/icons/ty.svg",
+                            color: secondaryColor,
+                          ),
+                          label: 'Ty-Lunch',
                         ),
-                        label: 'Ty-Lunch',
-                      ),
-                    ],
-                    currentIndex: selectedIndex,
-                    onTap: _onItemTapped,
+                      ],
+                      currentIndex: selectedIndex,
+                      onTap: _onItemTapped,
+                    ),
                   ),
                 ),
-              ),
       );
     }
   }
