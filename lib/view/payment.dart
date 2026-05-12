@@ -1371,175 +1371,209 @@ class _PaymentPageState extends State<PaymentPage> {
                                             ),
                                           ),
                                           onPressed: () async {
-                                            //   if (_selected2 == false) {
-                                            //     print(
-                                            //         "need to accept conditions");
-                                            //     Fluttertoast.showToast(
-                                            //         msg:
-                                            //             "accepter les conditions générales de vente");
-                                            //   } else if (conecsIndex == null) {
-                                            //     print("need to select cards");
-                                            //     Fluttertoast.showToast(
-                                            //         msg:
-                                            //             "choisissez parmi les cartes acceptées");
-                                            //   } else {
-                                            //     await payment
-                                            //         .payWithConecs(
-                                            //             data: checkout,
-                                            //             selectedConnects:
-                                            //                 selectedConnects)
-                                            //         .then(
-                                            //       (value) {
-                                            //         if (value != null) {
-                                            //           print("HTML DOCUMENTS");
-                                            //           print(
-                                            //               "PAY WITH CONNECS: $value");
-                                            //           if (value.contains(
-                                            //                   "not_enough_quantity") ||
-                                            //               value.contains(
-                                            //                   "false")) {
-                                            //             for (NewCartModel newcart
-                                            //                 in widget.cart) {
-                                            //               print(
-                                            //                   "sumulod sine na condition");
-                                            //               for (CartProduct cp
-                                            //                   in newcart
-                                            //                       .products) {
-                                            //                 print(
-                                            //                     "sumulod sine na condition 1");
-                                            //                 if (value.contains(cp
-                                            //                     .productId
-                                            //                     .toString())) {
-                                            //                   print(
-                                            //                       "sumulod sine na condition 2");
-                                            //                   print(
-                                            //                       "PRODUCT ID: ${cp.productId} = $value");
-                                            //                   outOfStockProduct =
-                                            //                       cp.name;
-                                            //                 }
-                                            //               }
-                                            //             }
-                                            //             MyDialog().scaleDialog(
-                                            //               context,
-                                            //               child: Material(
-                                            //                 color: Colors
-                                            //                     .transparent,
-                                            //                 elevation: 0,
-                                            //                 child: Container(
-                                            //                   width: double
-                                            //                       .infinity,
-                                            //                   height: double
-                                            //                       .infinity,
-                                            //                   decoration:
-                                            //                       const BoxDecoration(
-                                            //                     color: Colors
-                                            //                         .white,
-                                            //                   ),
-                                            //                   child: Padding(
-                                            //                     padding:
-                                            //                         const EdgeInsets
-                                            //                             .all(
-                                            //                             30),
-                                            //                     child: Column(
-                                            //                       mainAxisAlignment:
-                                            //                           MainAxisAlignment
-                                            //                               .center,
-                                            //                       children: [
-                                            //                         const SizedBox(
-                                            //                             height:
-                                            //                                 20),
-                                            //                         Center(
-                                            //                           child:
-                                            //                               Text(
-                                            //                             "Pas assez de quantité pour: $outOfStockProduct",
-                                            //                             textAlign:
-                                            //                                 TextAlign.center,
-                                            //                             style: const TextStyle(
-                                            //                                 fontSize:
-                                            //                                     18,
-                                            //                                 color:
-                                            //                                     kcPrimary),
-                                            //                           ),
-                                            //                         ),
-                                            //                         const SizedBox(
-                                            //                             height:
-                                            //                                 40),
-                                            //                         Container(
-                                            //                           height:
-                                            //                               55,
-                                            //                           width:
-                                            //                               300,
-                                            //                           padding: const EdgeInsets
-                                            //                               .symmetric(
-                                            //                               horizontal:
-                                            //                                   20),
-                                            //                           child:
-                                            //                               ElevatedButton(
-                                            //                             style: ElevatedButton
-                                            //                                 .styleFrom(
-                                            //                               backgroundColor:
-                                            //                                   kcPrimary,
-                                            //                               shape:
-                                            //                                   RoundedRectangleBorder(
-                                            //                                 borderRadius:
-                                            //                                     BorderRadius.circular(90),
-                                            //                               ),
-                                            //                             ),
-                                            //                             onPressed:
-                                            //                                 () {
-                                            //                               Navigator.pushAndRemoveUntil(
-                                            //                                   context,
-                                            //                                   MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
-                                            //                                   (Route<dynamic> route) => false);
-                                            //                             },
-                                            //                             child:
-                                            //                                 Text(
-                                            //                               "annuler"
-                                            //                                   .toUpperCase(),
-                                            //                               style:
-                                            //                                   const TextStyle(
-                                            //                                 color:
-                                            //                                     Colors.white,
-                                            //                                 fontSize:
-                                            //                                     14,
-                                            //                                 // fontWeight: FontWeight.w800,
-                                            //                               ),
-                                            //                             ),
-                                            //                           ),
-                                            //                         ),
-                                            //                       ],
-                                            //                     ),
-                                            //                   ),
-                                            //                 ),
-                                            //               ),
-                                            //             );
-                                            //           } else {
-                                            //             print("HTML DOCUMENTS");
-                                            //             debugPrint(
-                                            //                 "RETURN FROM PAYMENT: $value");
-                                            //             var document =
-                                            //                 parse(value);
-                                            //             debugPrint(
-                                            //                 "HTML DOC : ${document.outerHtml}");
-                                            //             Navigator.push(
-                                            //               context,
-                                            //               MaterialPageRoute(
-                                            //                 builder:
-                                            //                     (context) =>
-                                            //                         WebViewPage(
-                                            //                   htmlpage: document
-                                            //                       .outerHtml,
-                                            //                   cart: widget.cart,
-                                            //                   selectedconnecs:
-                                            //                       selectedConnects,
-                                            //                 ),
-                                            //               ),
-                                            //             );
-                                            //           }
-                                            //         }
-                                            //       },
-                                            //     );
-                                            //   }
+                                            if (_selected2 == false) {
+                                              print(
+                                                "need to accept conditions",
+                                              );
+                                              Fluttertoast.showToast(
+                                                msg:
+                                                    "accepter les conditions générales de vente",
+                                              );
+                                            } else if (conecsIndex == null) {
+                                              print("need to select cards");
+                                              Fluttertoast.showToast(
+                                                msg:
+                                                    "choisissez parmi les cartes acceptées",
+                                              );
+                                            } else {
+                                              await payment
+                                                  .payWithConecs(
+                                                    data: checkout,
+                                                    selectedConnects:
+                                                        selectedConnects,
+                                                  )
+                                                  .then((value) {
+                                                    if (value != null) {
+                                                      print("HTML DOCUMENTS");
+                                                      print(
+                                                        "PAY WITH CONNECS: $value",
+                                                      );
+                                                      if (value.contains(
+                                                            "not_enough_quantity",
+                                                          ) ||
+                                                          value.contains(
+                                                            "false",
+                                                          )) {
+                                                        for (NewCartModel
+                                                            newcart
+                                                            in widget.cart) {
+                                                          print(
+                                                            "sumulod sine na condition",
+                                                          );
+                                                          for (CartProduct cp
+                                                              in newcart
+                                                                  .products) {
+                                                            print(
+                                                              "sumulod sine na condition 1",
+                                                            );
+                                                            if (value.contains(
+                                                              cp.productId
+                                                                  .toString(),
+                                                            )) {
+                                                              print(
+                                                                "sumulod sine na condition 2",
+                                                              );
+                                                              print(
+                                                                "PRODUCT ID: ${cp.productId} = $value",
+                                                              );
+                                                              outOfStockProduct =
+                                                                  cp.name;
+                                                            }
+                                                          }
+                                                        }
+                                                        MyDialog().scaleDialog(
+                                                          context,
+                                                          child: Material(
+                                                            color:
+                                                                Colors
+                                                                    .transparent,
+                                                            elevation: 0,
+                                                            child: Container(
+                                                              width:
+                                                                  double
+                                                                      .infinity,
+                                                              height:
+                                                                  double
+                                                                      .infinity,
+                                                              decoration:
+                                                                  const BoxDecoration(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets.all(
+                                                                      30,
+                                                                    ),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    const SizedBox(
+                                                                      height:
+                                                                          20,
+                                                                    ),
+                                                                    Center(
+                                                                      child: Text(
+                                                                        "Pas assez de quantité pour: $outOfStockProduct",
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style: const TextStyle(
+                                                                          fontSize:
+                                                                              18,
+                                                                          color:
+                                                                              kcPrimary,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      height:
+                                                                          40,
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          55,
+                                                                      width:
+                                                                          300,
+                                                                      padding: const EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            20,
+                                                                      ),
+                                                                      child: ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                          backgroundColor:
+                                                                              kcPrimary,
+                                                                          shape: RoundedRectangleBorder(
+                                                                            borderRadius: BorderRadius.circular(
+                                                                              90,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        onPressed: () {
+                                                                          Navigator.pushAndRemoveUntil(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                              builder:
+                                                                                  (
+                                                                                    context,
+                                                                                  ) => LandingPage(
+                                                                                    ind:
+                                                                                        2,
+                                                                                  ),
+                                                                            ),
+                                                                            (
+                                                                              Route<
+                                                                                dynamic
+                                                                              >
+                                                                              route,
+                                                                            ) =>
+                                                                                false,
+                                                                          );
+                                                                        },
+                                                                        child: Text(
+                                                                          "annuler"
+                                                                              .toUpperCase(),
+                                                                          style: const TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize:
+                                                                                14,
+                                                                            // fontWeight: FontWeight.w800,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        print("HTML DOCUMENTS");
+                                                        debugPrint(
+                                                          "RETURN FROM PAYMENT: $value",
+                                                        );
+                                                        var document = parse(
+                                                          value,
+                                                        );
+                                                        debugPrint(
+                                                          "HTML DOC : ${document.outerHtml}",
+                                                        );
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (
+                                                                  context,
+                                                                ) => WebViewPage(
+                                                                  htmlpage:
+                                                                      document
+                                                                          .outerHtml,
+                                                                  cart:
+                                                                      widget
+                                                                          .cart,
+                                                                  selectedconnecs:
+                                                                      selectedConnects,
+                                                                ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    }
+                                                  });
+                                            }
                                           },
                                           child: const Text(
                                             "CONFIRMER",
