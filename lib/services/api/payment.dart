@@ -15,6 +15,7 @@ import "package:tylunch/model/edenred.dart";
 import "package:tylunch/model/item.dart";
 import "package:tylunch/model/new_cart_model.dart";
 import "package:tylunch/model/newcart.dart";
+import "package:tylunch/model/swile.dart";
 import "package:tylunch/services/database.dart";
 
 class PaymentAPI {
@@ -39,8 +40,8 @@ class PaymentAPI {
                   "product_id": cf.categories[i].prodId,
                   "formula_id": cf.categories[i].formulaId,
                   "category_id": cf.categories[i].categoryId,
-                }
-            ]
+                },
+            ],
           });
         }
         for (final CartProduct1 cp in im.cartproduct) {
@@ -51,7 +52,7 @@ class PaymentAPI {
             "unit_price": cp.unitPrice,
             "amount": cp.amount,
             "menu_id": cp.menuId,
-            "category_id": cp.categoryId
+            "category_id": cp.categoryId,
           });
         }
       }
@@ -62,30 +63,32 @@ class PaymentAPI {
         "payment_method": data.paymentMethod,
         "use_packaging": data.usePackaging.toString(),
         "items": item,
-        "source": "mobile"
+        "source": "mobile",
       };
 
       return http
-          .post("${Network.api}/front/order/pay-with-bank".toUrl,
-              headers: {
-                "Accept": "application/json",
-                'Content-Type': "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Cache-Control": "no-cache, private",
-                "Authorization": "Bearer $accesstoken"
-              },
-              body: jsonEncode(payload))
+          .post(
+            "${Network.api}/front/order/pay-with-bank".toUrl,
+            headers: {
+              "Accept": "application/json",
+              'Content-Type': "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "no-cache, private",
+              "Authorization": "Bearer $accesstoken",
+            },
+            body: jsonEncode(payload),
+          )
           .then((response) {
-        print("SUMULOD DIDI");
-        print("PAYMENT STATUSCODE : ${response.statusCode}");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          print("PAY WITH BANK DATA");
-          // print("PAYMENT WITH BANK: ${jsonDecode(response.body['errors'][])}");
-          debugPrint("PAYMENT BODY : ${response.body}");
-          return response.body;
-        }
-        return null;
-      });
+            print("SUMULOD DIDI");
+            print("PAYMENT STATUSCODE : ${response.statusCode}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("PAY WITH BANK DATA");
+              // print("PAYMENT WITH BANK: ${jsonDecode(response.body['errors'][])}");
+              debugPrint("PAYMENT BODY : ${response.body}");
+              return response.body;
+            }
+            return null;
+          });
     } catch (e, s) {
       print("ERROR PAYMENT DISPLAY: $e");
       print("$s");
@@ -112,8 +115,8 @@ class PaymentAPI {
                   "product_id": cf.categories[i].prodId,
                   "formula_id": cf.categories[i].formulaId,
                   "category_id": cf.categories[i].categoryId,
-                }
-            ]
+                },
+            ],
           });
         }
         for (final CartProduct1 cp in im.cartproduct) {
@@ -124,7 +127,7 @@ class PaymentAPI {
             "unit_price": cp.unitPrice,
             "amount": cp.amount,
             "menu_id": cp.menuId,
-            "category_id": cp.categoryId
+            "category_id": cp.categoryId,
           });
         }
       }
@@ -135,30 +138,32 @@ class PaymentAPI {
         "payment_method": data.paymentMethod,
         "use_packaging": data.usePackaging.toString(),
         "items": item,
-        "source": "mobile"
+        "source": "mobile",
       };
 
       return http
-          .post("${Network.api}/front/order/pay-with-bank-and-points".toUrl,
-              headers: {
-                "Accept": "application/json",
-                'Content-Type': "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Cache-Control": "no-cache, private",
-                "Authorization": "Bearer $accesstoken"
-              },
-              body: jsonEncode(payload))
+          .post(
+            "${Network.api}/front/order/pay-with-bank-and-points".toUrl,
+            headers: {
+              "Accept": "application/json",
+              'Content-Type': "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "no-cache, private",
+              "Authorization": "Bearer $accesstoken",
+            },
+            body: jsonEncode(payload),
+          )
           .then((response) {
-        print("SUMULOD DIDI");
-        print("PAYMENT STATUSCODE : ${response.statusCode}");
-        debugPrint("PAYMENT BODY : ${response.body}");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          print("PAY WITH BANK AND POINTS DATA");
-          debugPrint("PAYMENT BODY : ${response.body}");
-          return response.body;
-        }
-        return null;
-      });
+            print("SUMULOD DIDI");
+            print("PAYMENT STATUSCODE : ${response.statusCode}");
+            debugPrint("PAYMENT BODY : ${response.body}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("PAY WITH BANK AND POINTS DATA");
+              debugPrint("PAYMENT BODY : ${response.body}");
+              return response.body;
+            }
+            return null;
+          });
     } catch (e, s) {
       print("ERROR PAYMENT DISPLAY: $e");
       print("$s");
@@ -166,8 +171,10 @@ class PaymentAPI {
     }
   }
 
-  Future<String?> payWithPoints(
-      {required NewCart1Model data, required List<NewCartModel> ncdata}) async {
+  Future<String?> payWithPoints({
+    required NewCart1Model data,
+    required List<NewCartModel> ncdata,
+  }) async {
     try {
       final item = [];
 
@@ -186,8 +193,8 @@ class PaymentAPI {
                   "product_id": cf.categories[i].prodId,
                   "formula_id": cf.categories[i].formulaId,
                   "category_id": cf.categories[i].categoryId,
-                }
-            ]
+                },
+            ],
           });
         }
         for (final CartProduct1 cp in im.cartproduct) {
@@ -198,7 +205,7 @@ class PaymentAPI {
             "unit_price": cp.unitPrice,
             "amount": cp.amount,
             "menu_id": cp.menuId,
-            "category_id": cp.categoryId
+            "category_id": cp.categoryId,
           });
         }
       }
@@ -210,35 +217,37 @@ class PaymentAPI {
         "payment_method": data.paymentMethod,
         "use_packaging": data.usePackaging.toString(),
         "items": item,
-        "source": "mobile"
+        "source": "mobile",
       };
       await http
-          .post("${Network.api}/front/order/proceed".toUrl,
-              headers: {
-                "Accept": "application/json",
-                'Content-Type': "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Cache-Control": "no-cache, private",
-                "Authorization": "Bearer $accesstoken"
-              },
-              body: jsonEncode(payload))
+          .post(
+            "${Network.api}/front/order/proceed".toUrl,
+            headers: {
+              "Accept": "application/json",
+              'Content-Type': "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "no-cache, private",
+              "Authorization": "Bearer $accesstoken",
+            },
+            body: jsonEncode(payload),
+          )
           .then((response) {
-        print("SUMULOD DIDI");
-        print("PAYMENT STATUSCODE : ${response.statusCode}");
-        debugPrint("PAYMENT BODY : ${response.body}");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          print("PAY WITH POINTS DATA");
-          for (NewCartModel cart in ncdata) {
-            for (CartProduct prod in cart.products) {
-              /// delete product
-              db.deleteProduct(prodId: prod.productId, cartId: cart.id);
+            print("SUMULOD DIDI");
+            print("PAYMENT STATUSCODE : ${response.statusCode}");
+            debugPrint("PAYMENT BODY : ${response.body}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("PAY WITH POINTS DATA");
+              for (NewCartModel cart in ncdata) {
+                for (CartProduct prod in cart.products) {
+                  /// delete product
+                  db.deleteProduct(prodId: prod.productId, cartId: cart.id);
+                }
+              }
+              db.retrieve();
+              return response.body;
             }
-          }
-          db.retrieve();
-          return response.body;
-        }
-        return null;
-      });
+            return null;
+          });
     } catch (e, s) {
       print("ERROR PAYMENT DISPLAY: $e");
       print("$s");
@@ -247,8 +256,10 @@ class PaymentAPI {
     return null;
   }
 
-  Future<String?> payWithConecs(
-      {required NewCart1Model data, required String selectedConnects}) async {
+  Future<String?> payWithConecs({
+    required NewCart1Model data,
+    required String selectedConnects,
+  }) async {
     try {
       final item = [];
 
@@ -267,8 +278,8 @@ class PaymentAPI {
                   "product_id": cf.categories[i].prodId,
                   "formula_id": cf.categories[i].formulaId,
                   "category_id": cf.categories[i].categoryId,
-                }
-            ]
+                },
+            ],
           });
         }
         for (final CartProduct1 cp in im.cartproduct) {
@@ -279,7 +290,7 @@ class PaymentAPI {
             "unit_price": cp.unitPrice,
             "amount": cp.amount,
             "menu_id": cp.menuId,
-            "category_id": cp.categoryId
+            "category_id": cp.categoryId,
           });
         }
       }
@@ -291,28 +302,30 @@ class PaymentAPI {
         "use_packaging": data.usePackaging.toString(),
         "items": item,
         "selected_connecs": selectedConnects,
-        "source": "mobile"
+        "source": "mobile",
       };
 
       return http
-          .post("${Network.api}/front/order/pay-connecs".toUrl,
-              headers: {
-                "Accept": "application/json",
-                'Content-Type': "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Cache-Control": "no-cache, private",
-                "Authorization": "Bearer $accesstoken"
-              },
-              body: jsonEncode(payload))
+          .post(
+            "${Network.api}/front/order/pay-connecs".toUrl,
+            headers: {
+              "Accept": "application/json",
+              'Content-Type': "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "no-cache, private",
+              "Authorization": "Bearer $accesstoken",
+            },
+            body: jsonEncode(payload),
+          )
           .then((response) {
-        print("SUMULOD DIDI");
-        print("PAYMENT STATUSCODE : ${response.statusCode}");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          print("ADD TO CART BODY : ${response.body}");
-          return response.body;
-        }
-        return null;
-      });
+            print("SUMULOD DIDI");
+            print("PAYMENT STATUSCODE : ${response.statusCode}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("ADD TO CART BODY : ${response.body}");
+              return response.body;
+            }
+            return null;
+          });
     } catch (e, s) {
       print("ERROR PAYMENT DISPLAY: $e");
       print("$s");
@@ -324,87 +337,190 @@ class PaymentAPI {
     try {
       print("CODE PASS: $code");
       String clearCode = code!.replaceAll("[", " ").replaceAll("]", " ");
-      return await http.post(
-        "${Network.api}/front/order/edenred-token".toUrl,
-        headers: {
-          "Accept": "application/json",
-          HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-        },
-        body: {
-          "code": clearCode,
-        },
-      ).then((response) {
-        print("SUMULOD DIDI");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          var data = json.decode(response.body);
-          print("EDENRED TOKEN DATA");
-          print(response.body);
-          return EdenredModel.fromJson(data);
-        }
-        return null;
-      });
+      return await http
+          .post(
+            "${Network.api}/front/order/edenred-token".toUrl,
+            headers: {
+              "Accept": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+            body: {"code": clearCode},
+          )
+          .then((response) {
+            print("SUMULOD DIDI");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              var data = json.decode(response.body);
+              print("EDENRED TOKEN DATA");
+              print(response.body);
+              return EdenredModel.fromJson(data);
+            }
+            return null;
+          });
     } catch (e) {
       print("ERROR IN EDENRED TOKEN: $e");
     }
+    return null;
   }
 
-  Future<String?> payEdenred(
-      {required String? accessToken, required String? refreshToken}) async {
+  Future<String?> payEdenred({
+    required String? accessToken,
+    required String? refreshToken,
+  }) async {
     try {
       print("ACCESS TOKEN: $accessToken");
       print("REFRESHTOKEN: $refreshToken");
-      return await http.post(
-        "${Network.api}/front/order/pay-edenred".toUrl,
-        headers: {
-          "Accept": "application/json",
-          HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-        },
-        body: {
-          "access_token": accessToken,
-          "refresh_token": refreshToken,
-        },
-      ).then((response) {
-        print("SUMULOD DIDI PAY WITH EDENRED");
-        print("PAYMENT STATUSCODE : ${response.statusCode}");
-        print("PAYMENT STATUSCODE : ${response.reasonPhrase}");
-        debugPrint("BODY : ${response.body}");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          print("PAY EDENRED DATA");
-          return response.body;
-        }
-        return response.body;
-      });
+      return await http
+          .post(
+            "${Network.api}/front/order/pay-edenred".toUrl,
+            headers: {
+              "Accept": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+            body: {"access_token": accessToken, "refresh_token": refreshToken},
+          )
+          .then((response) {
+            print("SUMULOD DIDI PAY WITH EDENRED");
+            print("PAYMENT STATUSCODE : ${response.statusCode}");
+            print("PAYMENT STATUSCODE : ${response.reasonPhrase}");
+            debugPrint("BODY : ${response.body}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("PAY EDENRED DATA");
+              return response.body;
+            }
+            return response.body;
+          });
     } catch (e) {
       print("ERROR IN PAY EDENRED: $e");
     }
+    return null;
   }
 
-  Future<String?> addCard(
-      {required String card,
-      required String cvv,
-      required String expiry}) async {
+  Future<Map<String, dynamic>?> swileToken({
+    required String? code,
+    required String? state,
+  }) async {
     try {
-      return await http.post(
-        "${Network.api}/front/subscriber/add-card".toUrl,
-        headers: {
-          "Accept": "application/json",
-          HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-        },
-        body: {
-          "card": card,
-          "cvv": cvv,
-          "expiry": expiry,
-        },
-      ).then((response) {
-        print("SUMULOD DIDI");
-        print("ADD CARD STATUSCODE : ${response.statusCode}");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          print("ADD CARD DATA DATA");
-          debugPrint("ADD CARD BODY : ${response.body}");
-          return response.body;
-        }
-        return null;
-      });
+      print("CODE PASS: $code");
+      String clearCode = code!.replaceAll("[", " ").replaceAll("]", " ");
+      String clearState = state!.replaceAll("[", " ").replaceAll("]", " ");
+      return await http
+          .post(
+            "${Network.api}/front/order/swile-token".toUrl,
+            headers: {
+              "Accept": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+            body: {"code": clearCode, "state": clearState},
+          )
+          .then((response) {
+            print("SUMULOD DIDI");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              var data = json.decode(response.body);
+              print("SWILE TOKEN DATA");
+              print(response.body);
+              return json.decode(response.body);
+            }
+            return json.decode(response.body);
+          });
+    } catch (e, s) {
+      print("ERROR IN SWILE TOKEN: $e");
+      print("$s");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> swileCheckBalance({
+    required String? accessToken,
+    required String? state,
+  }) async {
+    try {
+      print("ACCESS TOKEN: $accessToken");
+      String clearState = state!.replaceAll("[", " ").replaceAll("]", " ");
+      return await http
+          .post(
+            "${Network.api}/front/order/swile-check-balance".toUrl,
+            headers: {
+              "Accept": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+            body: {"access_token": accessToken, "state": clearState},
+          )
+          .then((response) {
+            print("SUMULOD DIDI CHECK SWILE BALANCE");
+            print("PAYMENT STATUSCODE : ${response.statusCode}");
+            print("PAYMENT STATUSCODE : ${response.reasonPhrase}");
+            debugPrint("BODY : ${response.body}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("CHECK SWILE BALANCE DATA");
+              return json.decode(response.body);
+            }
+            return json.decode(response.body);
+          });
+    } catch (e) {
+      print("ERROR IN CHECK SWILE BALANCE: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> paySwile({
+    required String? accessToken,
+    required String? state,
+  }) async {
+    try {
+      print("ACCESS TOKEN: $accessToken");
+      print("STATE: $state");
+      String clearState = state!.replaceAll("[", " ").replaceAll("]", " ");
+      return await http
+          .post(
+            "${Network.api}/front/order/pay-swile".toUrl,
+            headers: {
+              "Accept": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+            body: {"access_token": accessToken, "state": clearState},
+          )
+          .then((response) {
+            print("SUMULOD DIDI PAY WITH SWILE");
+            print("PAYMENT STATUSCODE : ${response.statusCode}");
+            print("PAYMENT STATUSCODE : ${response.reasonPhrase}");
+            debugPrint("BODY : ${response.body}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("PAY SWILE DATA");
+              return json.decode(response.body);
+            }
+            return json.decode(response.body);
+          });
+    } catch (e) {
+      print("ERROR IN PAY SWILE: $e");
+      return null;
+    }
+  }
+
+  Future<String?> addCard({
+    required String card,
+    required String cvv,
+    required String expiry,
+  }) async {
+    try {
+      return await http
+          .post(
+            "${Network.api}/front/subscriber/add-card".toUrl,
+            headers: {
+              "Accept": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+            body: {"card": card, "cvv": cvv, "expiry": expiry},
+          )
+          .then((response) {
+            print("SUMULOD DIDI");
+            print("ADD CARD STATUSCODE : ${response.statusCode}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              print("ADD CARD DATA DATA");
+              debugPrint("ADD CARD BODY : ${response.body}");
+              return response.body;
+            }
+            return null;
+          });
     } catch (e, s) {
       print("ERROR ADD CARD: $e");
       print("$s");
@@ -414,19 +530,22 @@ class PaymentAPI {
 
   Future<void> getCard() async {
     try {
-      await http.get(
-          "${Network.api}/front/subscriber/client/card-subscription".toUrl,
-          headers: {
-            "Accepts": "application/json",
-            HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-          }).then((response) {
-        print("RESPONSE STATUS: ${response.statusCode}");
-        print("RESPONSE BODY: ${response.body}");
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          debugPrint("CARD BODY : ${response.body}");
-        }
-        return;
-      });
+      await http
+          .get(
+            "${Network.api}/front/subscriber/client/card-subscription".toUrl,
+            headers: {
+              "Accepts": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+          )
+          .then((response) {
+            print("RESPONSE STATUS: ${response.statusCode}");
+            print("RESPONSE BODY: ${response.body}");
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              debugPrint("CARD BODY : ${response.body}");
+            }
+            return;
+          });
     } catch (e, s) {
       print("ERROR CARD DISPLAY: $e");
       print("$s");

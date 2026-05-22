@@ -19,11 +19,12 @@ class WebViewPage extends StatefulWidget {
   final String htmlpage;
   final List<NewCartModel> cart;
   final String selectedconnecs;
-  const WebViewPage(
-      {super.key,
-      required this.htmlpage,
-      required this.cart,
-      required this.selectedconnecs});
+  const WebViewPage({
+    super.key,
+    required this.htmlpage,
+    required this.cart,
+    required this.selectedconnecs,
+  });
 
   @override
   State<WebViewPage> createState() => _WebViewPageState();
@@ -188,115 +189,331 @@ class _WebViewPageState extends State<WebViewPage> {
                 var urlParse = parsedUrl.queryParametersAll;
                 print("URLPARSE CODE: ${urlParse["code"]}");
 
-                _paymentAPI
-                    .edenredToken(code: urlParse["code"].toString())
-                    .then((value) {
+                _paymentAPI.edenredToken(code: urlParse["code"].toString()).then((
+                  value,
+                ) {
                   print("VALUE PARSE: $value");
                   _paymentAPI
                       .payEdenred(
-                          accessToken: value!.accessToken,
-                          refreshToken: value.refreshToken)
+                        accessToken: value!.accessToken,
+                        refreshToken: value.refreshToken,
+                      )
                       .then((value) {
-                    print("VALUE RETURN FROM PAY EDENRED: $value");
-                    if (value!.contains("success") || value.contains("true")) {
-                      for (NewCartModel cart in widget.cart) {
-                        for (CartProduct prod in cart.products) {
-                          /// delete product
-                          db.deleteProduct(
-                              prodId: prod.productId, cartId: cart.id);
-                        }
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const PaymentSuccessfulPage()),
-                      );
-                    } else if (value.contains("LIMIT_EXCEEDED") ||
-                        value.contains("false")) {
-                      MyDialog().scaleDialog(
-                        context,
-                        child: Material(
-                          color: Colors.transparent,
-                          elevation: 0,
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
+                        print("VALUE RETURN FROM PAY EDENRED: $value");
+                        if (value!.contains("success") ||
+                            value.contains("true")) {
+                          for (NewCartModel cart in widget.cart) {
+                            for (CartProduct prod in cart.products) {
+                              /// delete product
+                              db.deleteProduct(
+                                prodId: prod.productId,
+                                cartId: cart.id,
+                              );
+                            }
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const PaymentSuccessfulPage(),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(30),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(height: 20),
-                                  const Center(
-                                    child: Text(
-                                      "Pas assez d'équilibre",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 18, color: kcPrimary),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 40),
-                                  Container(
-                                    height: 55,
-                                    width: 300,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: kcPrimary,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(90),
+                          );
+                        } else if (value.contains("LIMIT_EXCEEDED") ||
+                            value.contains("false")) {
+                          MyDialog().scaleDialog(
+                            context,
+                            child: Material(
+                              color: Colors.transparent,
+                              elevation: 0,
+                              child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(30),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      const Center(
+                                        child: Text(
+                                          "Pas assez d'équilibre",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: kcPrimary,
+                                          ),
                                         ),
                                       ),
-                                      onPressed: () {
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LandingPage(ind: 2)),
-                                            (Route<dynamic> route) => false);
-                                      },
-                                      child: Text(
-                                        "annuler".toUpperCase(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          // fontWeight: FontWeight.w800,
+                                      const SizedBox(height: 40),
+                                      Container(
+                                        height: 55,
+                                        width: 300,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: kcPrimary,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(90),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (context) =>
+                                                        LandingPage(ind: 2),
+                                              ),
+                                              (Route<dynamic> route) => false,
+                                            );
+                                          },
+                                          child: Text(
+                                            "annuler".toUpperCase(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              // fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    } else  {
-                      Fluttertoast.showToast(
-                          msg:
-                              "Une erreur s'est produite lors de l'exécution de cette opération");
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LandingPage(ind: 2)),
-                          (Route<dynamic> route) => false);
-                    }
-                  });
+                          );
+                        } else {
+                          Fluttertoast.showToast(
+                            msg:
+                                "Une erreur s'est produite lors de l'exécution de cette opération",
+                          );
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LandingPage(ind: 2),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
+                        }
+                      });
                 });
               } else if (url.contains("session/logout")) {
                 print("ORDER  CANCEL");
                 Fluttertoast.showToast(msg: "Commande annulée");
                 Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LandingPage(ind: 2)),
-                    (Route<dynamic> route) => false);
+                  context,
+                  MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            } else if (widget.selectedconnecs == "swile") {
+              print("PAYMENT THROUGH SWILE");
+              final parsedUrl = Uri.parse(url);
+
+              if (url.contains("swile/?code=")) {
+                var urlParse = parsedUrl.queryParametersAll;
+                print("URLPARSE CODE: ${urlParse["code"]}");
+                print("URLPARSE CODE: ${urlParse["state"]}");
+
+                _paymentAPI
+                    .swileToken(
+                      code: urlParse["code"].toString(),
+                      state: urlParse["state"].toString(),
+                    )
+                    .then((value) {
+                      print("SWILE TOKEN API RETURN VALUE$value");
+
+                      if (value?['result'] == true) {
+                        _paymentAPI
+                            .swileCheckBalance(
+                              accessToken: value?["access_token"],
+                              state: urlParse["state"].toString(),
+                            )
+                            .then((balanceValue) {
+                              print("CHECK SWILE BALANCE: $balanceValue");
+                              if (balanceValue?['result'] == true) {
+                                print("CHECK SWILE BALANCE TRUE");
+                                print(
+                                  "BALANCE VALUE RETURN: ${balanceValue?['account_uuid']}",
+                                );
+
+                                _paymentAPI
+                                    .paySwile(
+                                      accessToken: value?["access_token"],
+                                      state: urlParse["state"].toString(),
+                                    )
+                                    .then((payValue) {
+                                      print(
+                                        "SWILE PAY VALUE RETURN: $payValue",
+                                      );
+                                      if (payValue?['result'] == true) {
+                                        print("SUCCESSFULL SWILE PAY");
+                                        for (NewCartModel cart in widget.cart) {
+                                          for (CartProduct prod
+                                              in cart.products) {
+                                            /// delete product
+                                            db.deleteProduct(
+                                              prodId: prod.productId,
+                                              cartId: cart.id,
+                                            );
+                                          }
+                                        }
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    const PaymentSuccessfulPage(),
+                                          ),
+                                        );
+                                      } else if (payValue?['result'] == false &&
+                                          payValue?['message'] ==
+                                              "LIMIT_EXCEEDED") {
+                                        print("LIMIT EXCEEDED SWILE PAY");
+                                        MyDialog().scaleDialog(
+                                          context,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            elevation: 0,
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  30,
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    const SizedBox(height: 20),
+                                                    const Center(
+                                                      child: Text(
+                                                        "Pas assez d'équilibre",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: kcPrimary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 40),
+                                                    Container(
+                                                      height: 55,
+                                                      width: 300,
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                          ),
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              kcPrimary,
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  90,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pushAndRemoveUntil(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      LandingPage(
+                                                                        ind: 2,
+                                                                      ),
+                                                            ),
+                                                            (
+                                                              Route<dynamic>
+                                                              route,
+                                                            ) => false,
+                                                          );
+                                                        },
+                                                        child: Text(
+                                                          "annuler"
+                                                              .toUpperCase(),
+                                                          style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14,
+                                                            // fontWeight: FontWeight.w800,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg:
+                                              "${payValue?['display_message']}",
+                                        );
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    LandingPage(ind: 2),
+                                          ),
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      }
+                                    });
+                              } else {
+                                print("CHECK SWILE BALANCE FALSE");
+
+                                Fluttertoast.showToast(
+                                  msg: "${balanceValue?['display_message']}",
+                                );
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LandingPage(ind: 2),
+                                  ),
+                                  (Route<dynamic> route) => false,
+                                );
+                              }
+                            });
+                      } else {
+                        print("SWILE TOKEN FALSE");
+
+                        Fluttertoast.showToast(
+                          msg: "${value?['display_message'] ?? ""}",
+                        );
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LandingPage(ind: 2),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
+                      }
+                    });
+              } else if (url.contains("session/logout")) {
+                print("ORDER  CANCEL");
+                Fluttertoast.showToast(msg: "Commande annulée");
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
+                  (Route<dynamic> route) => false,
+                );
               }
             } else {
               // if (url.contains("https://back.tylunch.studioseizh.com")) {
@@ -305,16 +522,19 @@ class _WebViewPageState extends State<WebViewPage> {
                 // if (url.contains("https://admin.ty-lunch.fr")) {
                 print("SA IF SUMULOD");
                 if (url.contains(
-                    // "https://admin.ty-lunch.fr/api/front/order/payment/status-cancel")) {
-                    "${Network.api}/front/order/payment/status-cancel")) {
+                  // "https://admin.ty-lunch.fr/api/front/order/payment/status-cancel")) {
+                  "${Network.api}/front/order/payment/status-cancel",
+                )) {
                   // "https://tylunch.studioseizh.com/api/front/order/payment/status-cancel")) {
                   print("ORDER  CANCEL");
                   Fluttertoast.showToast(msg: "Commande annulée");
                   Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LandingPage(ind: 2)),
-                      (Route<dynamic> route) => false);
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LandingPage(ind: 2),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
                 } else {
                   print("ORDER  SUCCESS");
                   print("URL RETURN: $url");
@@ -328,7 +548,8 @@ class _WebViewPageState extends State<WebViewPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PaymentSuccessfulPage()),
+                      builder: (context) => const PaymentSuccessfulPage(),
+                    ),
                   );
                 }
               } else {
@@ -357,9 +578,7 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WebViewWidget(controller: _controller),
-    );
+    return Scaffold(body: WebViewWidget(controller: _controller));
   }
 }
 

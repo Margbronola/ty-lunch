@@ -1,24 +1,24 @@
-class EdenredModel {
-  final String idToken;
+class SwileModel {
+  final String tokenType;
   final String accessToken;
   final String refreshToken;
 
-  const EdenredModel({
-    required this.idToken,
+  const SwileModel({
+    required this.tokenType,
     required this.accessToken,
     required this.refreshToken,
   });
 
-  factory EdenredModel.fromJson(Map<String, dynamic> json) {
-    return EdenredModel(
-      idToken: json['id_token'],
+  factory SwileModel.fromJson(Map<String, dynamic> json) {
+    return SwileModel(
+      tokenType: json['token_type'],
       accessToken: json['access_token'],
       refreshToken: json['refresh_token'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "id_token": idToken.toString(),
+    "token_type": tokenType.toString(),
     "access_token": accessToken.toString(),
     "refresh_token": refreshToken.toString(),
   };

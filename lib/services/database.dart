@@ -21,11 +21,7 @@ class DatabaseServices {
   Future<Database> _initDB() async {
     Directory documentsDir = await getApplicationDocumentsDirectory();
     String path = join(documentsDir.path, "tylunch73.db");
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
   static Database? _database;
@@ -33,56 +29,111 @@ class DatabaseServices {
 
   Future _onCreate(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, subtotal DOUBLE, date TEXT, user_id INT NOT NULL)');
+      'CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, subtotal DOUBLE, date TEXT, user_id INT NOT NULL)',
+    );
     await db.execute(
-        'CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, prodId INT, name TEXT NOT NULL, meals TEXT, price DOUBLE NOT NULL, isformula INT DEFAULT 0,  total DOUBLE NOT NULL ,quantity INT NOT NULL, menuId INT, day INT NOT NULL, categoryId INT NOT NULL,  image TEXT, cart_id INT NOT NULL, FOREIGN KEY (cart_id) REFERENCES cart (id))');
+      'CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, prodId INT, name TEXT NOT NULL, meals TEXT, price DOUBLE NOT NULL, isformula INT DEFAULT 0,  total DOUBLE NOT NULL ,quantity INT NOT NULL, menuId INT, day INT NOT NULL, categoryId INT NOT NULL,  image TEXT, cart_id INT NOT NULL, FOREIGN KEY (cart_id) REFERENCES cart (id))',
+    );
   }
 
   /// RETRIEVE DATA IN DATABASE
   Future<List<NewCartModel>?> retrieve() async {
     try {
       final Database db = await instance.database;
-      final List data = await db
-          .rawQuery("SELECT * FROM cart WHERE user_id = ${loggedUser!.id}");
+      final List data = await db.rawQuery(
+        "SELECT * FROM cart WHERE user_id = ${loggedUser!.id}",
+      );
       final List<NewCartModel> res = [];
       for (Map<String, dynamic> datum in data) {
-        List products = await db
-            .rawQuery("SELECT * FROM product WHERE cart_id = ${datum['id']}");
+        List products = await db.rawQuery(
+          "SELECT * FROM product WHERE cart_id = ${datum['id']}",
+        );
         final NewCartModel cartModel = NewCartModel(
           id: datum['id'],
           subTotal: datum['subtotal'],
           date: DateTime.parse(datum['date']),
           clientId: loggedUser!.id,
-          products: products
-              .map((e) => CartProduct.fromJson(
-                  e, e["isformula"] == null ? false : e['isformula'] == 1))
-              .toList(),
+          products:
+              products
+                  .map(
+                    (e) => CartProduct.fromJson(
+                      e,
+                      e["isformula"] == null ? false : e['isformula'] == 1,
+                    ),
+                  )
+                  .toList(),
         );
         print(
-            "LORIENNTTTT ON CART: ${DateFormat("yyyy-MM-dd").format(DateTime.parse(cartModel.date.toString())).compareTo(DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 1)))) >= 0}");
+          "LORIENNTTTT ON CART: ${DateFormat("yyyy-MM-dd").format(DateTime.parse(cartModel.date.toString())).compareTo(DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 1)))) >= 0}",
+        );
         if (cartModel.subTotal == 0.0) {
           deleteCartData(cartId: datum['id']);
         } else if (loggedUser!.company.deliveryType == 1
-            ? DateFormat("yyyy-MM-dd").format(DateTime.now()).compareTo(
-                        DateFormat("yyyy-MM-dd").format(
-                            DateTime.parse(cartModel.date.toString()))) ==
+            ? DateFormat("yyyy-MM-dd")
+                        .format(DateTime.now())
+                        .compareTo(
+                          DateFormat(
+                            "yyyy-MM-dd",
+                          ).format(DateTime.parse(cartModel.date.toString())),
+                        ) ==
                     0
-                ? DateFormat("yyyy-MM-dd").format(DateTime.now()).compareTo(DateFormat("yyyy-MM-dd").format(DateTime.parse(cartModel.date.toString()))) == 0 &&
-                    DateFormat("HH:mm").format(DateTime.now()).compareTo("10:30") <
+                ? DateFormat("yyyy-MM-dd")
+                            .format(DateTime.now())
+                            .compareTo(
+                              DateFormat("yyyy-MM-dd").format(
+                                DateTime.parse(cartModel.date.toString()),
+                              ),
+                            ) ==
+                        0 &&
+                    DateFormat(
+                          "HH:mm",
+                        ).format(DateTime.now()).compareTo("10:30") <
                         0
                 : DateFormat("yyyy-MM-dd")
                         .format(DateTime.parse(cartModel.date.toString()))
-                        .compareTo(DateFormat("yyyy-MM-dd").format(
-                            DateTime.now().add(const Duration(days: 1)))) >=
+                        .compareTo(
+                          DateFormat(
+                            "yyyy-MM-dd",
+                          ).format(DateTime.now().add(const Duration(days: 1))),
+                        ) >=
                     0
             : DateFormat("yyyy-MM-dd")
+                    .format(DateTime.parse(cartModel.date.toString()))
+                    .compareTo(
+                      DateFormat(
+                        "yyyy-MM-dd",
+                      ).format(DateTime.now().add(const Duration(days: 1))),
+                    ) >=
+                0
+            ? DateFormat("HH:mm").format(DateTime.now()).compareTo("18:00") < 0
+                ? DateFormat(
+                          "HH:mm",
+                        ).format(DateTime.now()).compareTo("18:00") <
+                        0 &&
+                    DateFormat("yyyy-MM-dd")
+                            .format(DateTime.parse(cartModel.date.toString()))
+                            .compareTo(
+                              DateFormat("yyyy-MM-dd").format(
+                                DateTime.now().add(const Duration(days: 1)),
+                              ),
+                            ) >=
+                        0
+                : DateFormat("yyyy-MM-dd")
                         .format(DateTime.parse(cartModel.date.toString()))
-                        .compareTo(DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 1)))) >=
+                        .compareTo(
+                          DateFormat(
+                            "yyyy-MM-dd",
+                          ).format(DateTime.now().add(const Duration(days: 2))),
+                        ) >=
                     0
-                ? DateFormat("HH:mm").format(DateTime.now()).compareTo("18:00") < 0
-                    ? DateFormat("HH:mm").format(DateTime.now()).compareTo("18:00") < 0 && DateFormat("yyyy-MM-dd").format(DateTime.parse(cartModel.date.toString())).compareTo(DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 1)))) >= 0
-                    : DateFormat("yyyy-MM-dd").format(DateTime.parse(cartModel.date.toString())).compareTo(DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 2)))) >= 0
-                : DateFormat("yyyy-MM-dd").format(DateTime.parse(cartModel.date.toString())).compareTo(DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 2)))) >= 0) {
+            : DateFormat("yyyy-MM-dd")
+                    .format(DateTime.parse(cartModel.date.toString()))
+                    .compareTo(
+                      DateFormat(
+                        "yyyy-MM-dd",
+                      ).format(DateTime.now().add(const Duration(days: 2))),
+                    ) >=
+                0) {
           res.add(cartModel);
           cartLength = cartModel.products.length;
         } else {
@@ -117,43 +168,39 @@ class DatabaseServices {
   // }
 
   /// UPDATE ITEM IN DATABASE
-  Future<void> updateItem(
-      {required int cartId, required CartProduct product}) async {
+  Future<void> updateItem({
+    required int cartId,
+    required CartProduct product,
+  }) async {
     final Database db = await instance.database;
     print("UPDATE");
     final CartProduct? prevItem = await getProduct(id: product.productId);
     if (prevItem == null) return;
-    await db.update(
-        "product",
-        {
-          "prodId": product.productId,
-          "quantity": product.quantity.toInt() + prevItem.quantity,
-          "total":
-              (product.quantity.toInt() + prevItem.quantity) * product.price
-        },
-        where: "prodId = ${product.productId} AND cart_id = $cartId");
+    await db.update("product", {
+      "prodId": product.productId,
+      "quantity": product.quantity.toInt() + prevItem.quantity,
+      "total": (product.quantity.toInt() + prevItem.quantity) * product.price,
+    }, where: "prodId = ${product.productId} AND cart_id = $cartId");
     double total = await getCurrentTotal(cartId);
     await updateSubTotal(cartId: cartId, subtotal: total);
     await retrieve();
   }
 
   /// UPDATE ITEM QTY IN DATABASE
-  Future<void> updateQty(
-      {required int cartId,
-      required CartProduct product,
-      required int qty}) async {
+  Future<void> updateQty({
+    required int cartId,
+    required CartProduct product,
+    required int qty,
+  }) async {
     final Database db = await instance.database;
     print("UPDATE");
     final CartProduct? prevItem = await getProduct(id: product.productId);
     if (prevItem == null) return;
-    await db.update(
-        "product",
-        {
-          "prodId": product.productId,
-          "quantity": qty,
-          "total": qty * product.price
-        },
-        where: "prodId = ${product.productId} AND cart_id = $cartId");
+    await db.update("product", {
+      "prodId": product.productId,
+      "quantity": qty,
+      "total": qty * product.price,
+    }, where: "prodId = ${product.productId} AND cart_id = $cartId");
     double total = await getCurrentTotal(cartId);
     await updateSubTotal(cartId: cartId, subtotal: total);
     await retrieve();
@@ -164,18 +211,19 @@ class DatabaseServices {
     final Database db = await instance.database;
     await db.delete("cart", where: "id = $cartId");
     await updateSubTotal(
-        cartId: cartId, subtotal: await getCurrentTotal(cartId));
+      cartId: cartId,
+      subtotal: await getCurrentTotal(cartId),
+    );
     // await retrieve();
   }
 
-  Future<void> deleteProduct({
-    required int prodId,
-    required int cartId,
-  }) async {
+  Future<void> deleteProduct({required int prodId, required int cartId}) async {
     final Database db = await instance.database;
     await db.delete('product', where: 'prodId = $prodId AND cart_id = $cartId');
     await updateSubTotal(
-        cartId: cartId, subtotal: await getCurrentTotal(cartId));
+      cartId: cartId,
+      subtotal: await getCurrentTotal(cartId),
+    );
     await retrieve();
   }
 
@@ -191,8 +239,10 @@ class DatabaseServices {
     return nTotal;
   }
 
-  Future<void> updateSubTotal(
-      {required int cartId, required double subtotal}) async {
+  Future<void> updateSubTotal({
+    required int cartId,
+    required double subtotal,
+  }) async {
     print("gi update an amount");
     print("TOTAL : $subtotal");
     final Database db = await instance.database;
@@ -234,15 +284,17 @@ class DatabaseServices {
       print("DATA INSERT: $model");
       int result = 0;
       final Database db = await instance.database;
-      await db.insert('cart', {
-        "subtotal": model.subTotal.toDouble(),
-        "user_id": loggedUser!.id,
-        "date": model.date.toString(),
-      }).then((int cartId) async {
-        for (CartProduct product in model.products) {
-          await addSingleItem(cartId: cartId, product: product);
-        }
-      });
+      await db
+          .insert('cart', {
+            "subtotal": model.subTotal.toDouble(),
+            "user_id": loggedUser!.id,
+            "date": model.date.toString(),
+          })
+          .then((int cartId) async {
+            for (CartProduct product in model.products) {
+              await addSingleItem(cartId: cartId, product: product);
+            }
+          });
       return result;
     } catch (e, s) {
       print("ERROR IN ADDING IN DATABASE: $e");
@@ -251,8 +303,10 @@ class DatabaseServices {
     }
   }
 
-  Future<void> addSingleItem(
-      {required int cartId, required CartProduct product}) async {
+  Future<void> addSingleItem({
+    required int cartId,
+    required CartProduct product,
+  }) async {
     final Database db = await instance.database;
     final Map<String, dynamic> body = {
       "prodId": product.productId,
