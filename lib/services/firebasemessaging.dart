@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tylunch/services/api/authentication.dart';
 
 class PushNotification {
@@ -7,35 +8,34 @@ class PushNotification {
   static final PushNotification _instance = PushNotification._pr();
   static PushNotification get instance => _instance;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin
+  _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final Authentication auth = Authentication();
 
   Future<void> init(context, int id, String accesstoken) async {
     try {
+      print("TRYING TO CONNECT TO FIREBASE PROVIDER FOR PUSH NOTIFICATIONS");
       final NotificationSettings settings = await _fcm.requestPermission(
         alert: true,
-        announcement: false,
         badge: true,
-        carPlay: false,
-        criticalAlert: false,
         sound: true,
-        provisional: false,
       );
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
         listen(context);
-        print("${settings.authorizationStatus}");
+        print("settings.authorizationStatus: ${settings.authorizationStatus}");
+
+        final String? ff = await fcmToken();
+        print("FCM TOKEN : $ff");
+        if (ff != null) {
+          auth.addfcmtoken(token: ff, id: id, accesstoken: accesstoken);
+        }
       } else {
         print("NOT GRANTED");
       }
-      final String? ff = await fcmToken();
-      auth.addfcmtoken(
-        token: "$ff",
-        id: id,
-        accesstoken: accesstoken,
-      );
-      print("FCM TOKEN : $ff");
-    } catch (e) {
+    } catch (e, s) {
       print("UNABLE TO CONNECT TO FIREBASE PROVIDER : $e");
+      print("STACK TRACE : $s");
       return;
     }
   }
@@ -43,7 +43,10 @@ class PushNotification {
   void listen(context) {
     _fcm.getInitialMessage().then((value) {});
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("MESSAGE : ${message.notification?.body}");
+      print("onMessage MESSAGE : ${message.notification?.body}");
+
+      display(notification: message);
+
       // Flushbar(
       //   title: message.notification!.title,
       //   message: message.notification!.body,
@@ -52,8 +55,49 @@ class PushNotification {
       // ).show(context);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("MESSAGE : $message");
+      print("onMessageOpenedApp MESSAGE : $message");
+      display(notification: message);
     });
+  }
+
+  Future display({required RemoteMessage notification}) async {
+    print("test notification alert");
+    print("DATA: ${notification.data}");
+    print("TITLE: ${notification.notification!.title}");
+    print("BODY: ${notification.notification!.body}");
+    print("LINK: ${notification.data['link']}");
+    print("IMAGE: ${notification.notification!.android?.imageUrl}");
+    print("IOS");
+    print("IMAGE: ${notification.notification!.apple?.imageUrl}");
+
+    // final String largeIconPath = await _downloadAndSaveFile(
+    //   'https://back.eg-czacademy.com/images/${notification.notification!.android?.imageUrl ?? ""}',
+    //   'largeIcon',
+    // );
+
+    await _flutterLocalNotificationsPlugin.show(
+      id: notification.hashCode,
+      title: notification.notification!.title,
+      body: notification.notification!.body,
+      notificationDetails: NotificationDetails(
+        // iOS: DarwinNotificationDetails(attachments: [
+        //   DarwinNotificationAttachment(
+        //       "https://back.eg-czacademy.com/images/${notification.notification!.apple?.imageUrl}")
+        // ]),
+        android: AndroidNotificationDetails(
+          'high_importance_channel',
+          'High Importance Notifications',
+          channelDescription:
+              'This channel is used for important notifications.',
+          importance: Importance.max,
+          priority: Priority.max,
+          icon: '@mipmap/ic_launcher',
+          // largeIcon: FilePathAndroidBitmap(largeIconPath),
+          styleInformation: const BigTextStyleInformation(''),
+        ),
+      ),
+      payload: notification.data['link'],
+    );
   }
 
   Future<String?> fcmToken() async => await _fcm.getToken();
