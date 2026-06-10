@@ -15,6 +15,8 @@ class PushNotification {
   Future<void> init(context, int id, String accesstoken) async {
     try {
       print("TRYING TO CONNECT TO FIREBASE PROVIDER FOR PUSH NOTIFICATIONS");
+      await initializeLocalNotifications();
+
       final NotificationSettings settings = await _fcm.requestPermission(
         alert: true,
         badge: true,
@@ -24,6 +26,9 @@ class PushNotification {
           settings.authorizationStatus == AuthorizationStatus.provisional) {
         listen(context);
         print("settings.authorizationStatus: ${settings.authorizationStatus}");
+
+        final apns = await FirebaseMessaging.instance.getAPNSToken();
+        print("APNS TOKEN: $apns");
 
         final String? ff = await fcmToken();
         print("FCM TOKEN : $ff");
@@ -46,44 +51,54 @@ class PushNotification {
       print("onMessage MESSAGE : ${message.notification?.body}");
 
       display(notification: message);
-
-      // Flushbar(
-      //   title: message.notification!.title,
-      //   message: message.notification!.body,
-      //   flushbarPosition: FlushbarPosition.TOP,
-      //   duration: const Duration(seconds: 3),
-      // ).show(context);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("onMessageOpenedApp MESSAGE : $message");
       display(notification: message);
     });
+
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
+  Future<void> initializeLocalNotifications() async {
+    const AndroidInitializationSettings androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const DarwinInitializationSettings iosSettings =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: androidSettings, iOS: iosSettings);
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      settings: initializationSettings,
+    );
   }
 
   Future display({required RemoteMessage notification}) async {
     print("test notification alert");
     print("DATA: ${notification.data}");
-    print("TITLE: ${notification.notification!.title}");
-    print("BODY: ${notification.notification!.body}");
-    print("LINK: ${notification.data['link']}");
-    print("IMAGE: ${notification.notification!.android?.imageUrl}");
-    print("IOS");
-    print("IMAGE: ${notification.notification!.apple?.imageUrl}");
-
-    // final String largeIconPath = await _downloadAndSaveFile(
-    //   'https://back.eg-czacademy.com/images/${notification.notification!.android?.imageUrl ?? ""}',
-    //   'largeIcon',
-    // );
+    print("TITLE: ${notification.notification?.title ?? ""}");
+    print("BODY: ${notification.notification?.body ?? ""}");
 
     await _flutterLocalNotificationsPlugin.show(
       id: notification.hashCode,
-      title: notification.notification!.title,
-      body: notification.notification!.body,
+      title: notification.notification?.title ?? "",
+      body: notification.notification?.body ?? "",
       notificationDetails: NotificationDetails(
-        // iOS: DarwinNotificationDetails(attachments: [
-        //   DarwinNotificationAttachment(
-        //       "https://back.eg-czacademy.com/images/${notification.notification!.apple?.imageUrl}")
-        // ]),
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
         android: AndroidNotificationDetails(
           'high_importance_channel',
           'High Importance Notifications',
