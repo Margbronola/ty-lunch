@@ -542,9 +542,7 @@ class _WebViewPageState extends State<WebViewPage> {
                       } else {
                         print("SWILE TOKEN FALSE");
 
-                        showError(
-                          msg: "${value?['display_message'] ?? ""}",
-                        );
+                        showError(msg: "${value?['display_message'] ?? ""}");
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -567,7 +565,9 @@ class _WebViewPageState extends State<WebViewPage> {
               // Match on the path only: a host mismatch must not decide
               // whether the customer gets a confirmation.
               final Uri returned = Uri.parse(url);
-              if (returned.path.endsWith("/front/order/payment/status-cancel")) {
+              if (returned.path.endsWith(
+                "/front/order/payment/status-cancel",
+              )) {
                 _finishCancelled();
               } else if (returned.path.endsWith(
                 "/front/order/payment/status-success",

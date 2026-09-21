@@ -2,7 +2,6 @@
 
 import "dart:convert";
 import "dart:io";
-
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import "package:tylunch/extension/string.dart";
@@ -15,7 +14,6 @@ import "package:tylunch/model/edenred.dart";
 import "package:tylunch/model/item.dart";
 import "package:tylunch/model/new_cart_model.dart";
 import "package:tylunch/model/newcart.dart";
-import "package:tylunch/model/swile.dart";
 import "package:tylunch/services/database.dart";
 
 class PaymentAPI {
@@ -431,7 +429,8 @@ class PaymentAPI {
       String clearState = state!.replaceAll("[", " ").replaceAll("]", " ");
       return await http
           .post(
-            "${Network.api}/front/order/swile-check-balance".toUrl,
+            "${Network.api}/front/order/swile-check-balance?simulate=limit_exceeded"
+                .toUrl,
             headers: {
               "Accept": "application/json",
               HttpHeaders.authorizationHeader: "Bearer $accesstoken",

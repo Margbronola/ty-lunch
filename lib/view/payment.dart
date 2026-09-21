@@ -79,10 +79,51 @@ class _PaymentPageState extends State<PaymentPage> {
   // cover the total, answers with the bank form for the remainder. Without credit
   // the whole amount goes to the bank.
   Future<void> _confirmPayment() async {
-    final bool hasPoints = (loggedUser!.points ?? 0) > 0;
-    final String? body = hasPoints
-        ? await payment.payWithPoints(data: checkout, ncdata: widget.cart)
-        : await payment.payWithBank(data: checkout);
+    // final bool hasPoints = (loggedUser!.points ?? 0) > 0;
+    // hasPoints
+    //     ? print("PAYMENT METHOD: ${loggedUser!.points}credit points")
+    //     : print("PAYMENT METHOD: bank");
+    // // final String? body =
+    // //     hasPoints
+    // //         ? await payment.payWithPoints(data: checkout, ncdata: widget.cart)
+    // //         : await payment.payWithBank(data: checkout);
+
+    final double userPoints =
+        double.tryParse('${loggedUser?.points ?? 0}') ?? 0.0;
+
+    final double totalAmount =
+        double.tryParse('${checkout.subTotal ?? 0}') ?? 0.0;
+
+    print("Subtotal: ${checkout.subTotal}");
+
+    String? body;
+
+    if (userPoints <= 0) {
+      // No credit points
+      print('PAYMENT METHOD: bank');
+
+      body = await payment.payWithBank(data: checkout);
+    } else if (userPoints >= totalAmount) {
+      // Points are enough to pay the entire amount
+      print(
+        'PAYMENT METHOD: credit points '
+        '(${userPoints.toStringAsFixed(2)} points)',
+      );
+
+      body = await payment.payWithPoints(data: checkout, ncdata: widget.cart);
+    } else {
+      // Points are not enough, use points + bank
+      final double remainingAmount = totalAmount - userPoints;
+
+      print(
+        'PAYMENT METHOD: bank + credit points '
+        '| Points: $userPoints '
+        '| Total: $totalAmount '
+        '| Remaining bank: $remainingAmount',
+      );
+
+      body = await payment.payWithBankAndPoints(data: checkout);
+    }
     if (!mounted) return;
     if (body == null) {
       showError(msg: "Le paiement a échoué");
@@ -104,9 +145,7 @@ class _PaymentPageState extends State<PaymentPage> {
       _showOutOfStock(body);
       return;
     }
-    showError(
-      msg: json["message"]?.toString() ?? "Le paiement a échoué",
-    );
+    showError(msg: json["message"]?.toString() ?? "Le paiement a échoué");
   }
 
   void _openBankForm(String html) {
@@ -114,11 +153,12 @@ class _PaymentPageState extends State<PaymentPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WebViewPage(
-          htmlpage: document.outerHtml,
-          cart: widget.cart,
-          selectedconnecs: selectedConnects,
-        ),
+        builder:
+            (context) => WebViewPage(
+              htmlpage: document.outerHtml,
+              cart: widget.cart,
+              selectedconnecs: selectedConnects,
+            ),
       ),
     );
   }

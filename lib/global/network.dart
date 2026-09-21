@@ -5,5 +5,5 @@ class Network {
 
   // The Banque "Confirmer" flow uses the test payment endpoints while it is
   // being tested; everything else stays on the normal api.
-  static String get testApi => "$url/api/test";
+  // static String get testApi => "$url/api/test";
 }
