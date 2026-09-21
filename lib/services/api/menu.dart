@@ -21,20 +21,25 @@ class MenuApi {
 
   Future<void> getMenu() async {
     try {
-      await http.get("${Network.api}/front/menus/weekly".toUrl, headers: {
-        "Accepts": "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-      }).then((response) {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          var data = json.decode(response.body);
-          var menu = data["results"];
-          print("MENU DATA: $data");
-          print("MENU DATA: $menu");
-          WeeklyMenuModel ffMenu = WeeklyMenuModel.fromJson(data);
-          _weekdaysVM.populate(ffMenu);
-        }
-        return;
-      });
+      await http
+          .get(
+            "${Network.api}/front/menus/weekly".toUrl,
+            headers: {
+              "Accepts": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+          )
+          .then((response) {
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              var data = json.decode(response.body);
+              var menu = data["results"];
+              print("MENU DATA: $data");
+              print("MENU DATA: $menu");
+              WeeklyMenuModel ffMenu = WeeklyMenuModel.fromJson(data);
+              _weekdaysVM.populate(ffMenu);
+            }
+            return;
+          });
     } catch (e, s) {
       print("ERROR THIS WEEK MENU DISPLAY: $e");
       print("$s");
@@ -44,19 +49,23 @@ class MenuApi {
 
   Future<NextWeekMenuModel?> getNextWeekMenu() async {
     try {
-      return await http.get(
-          "${Network.api}/front/menus/show/next-week-menus".toUrl,
-          headers: {
-            "Accepts": "application/json",
-            HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-          }).then((response) {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          var data = json.decode(response.body);
-          print("NEXT WEEK MENU: $data");
-          return NextWeekMenuModel.fromJson(data);
-        }
-        return null;
-      });
+      return await http
+          .get(
+            "${Network.api}/front/menus/show/next-week-menus".toUrl,
+            // "${Network.api}/test/front/menus/show/next-week-menus".toUrl,
+            headers: {
+              "Accepts": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+          )
+          .then((response) {
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              var data = json.decode(response.body);
+              print("NEXT WEEK MENU: $data");
+              return NextWeekMenuModel.fromJson(data);
+            }
+            return null;
+          });
     } catch (e, s) {
       print("ERROR NEXT WEEK MENU DISPLAY: $e");
       print("$s");
@@ -67,18 +76,22 @@ class MenuApi {
   Future<void> getMenuByDate({required String date}) async {
     try {
       await http
-          .get("${Network.api}/front/menus/weekly?date=$date".toUrl, headers: {
-        "Accepts": "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-      }).then((response) {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          var data = json.decode(response.body);
-          print("NEXT WEEK MENU: $data");
-          WeeklyMenuModel ffMenu = WeeklyMenuModel.fromJson(data);
-          _weekdaysVM.populate(ffMenu);
-        }
-        return;
-      });
+          .get(
+            "${Network.api}/front/menus/weekly?date=$date".toUrl,
+            headers: {
+              "Accepts": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+          )
+          .then((response) {
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              var data = json.decode(response.body);
+              print("NEXT WEEK MENU: $data");
+              WeeklyMenuModel ffMenu = WeeklyMenuModel.fromJson(data);
+              _weekdaysVM.populate(ffMenu);
+            }
+            return;
+          });
     } catch (e, s) {
       print("ERROR NEXT WEEK MENU DATA DISPLAY: $e");
       print("$s");
@@ -88,18 +101,25 @@ class MenuApi {
 
   Future<void> getCategory() async {
     try {
-      await http.get("${Network.api}/front/category/list".toUrl, headers: {
-        "Accepts": "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-      }).then((response) {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          var data = json.decode(response.body);
-          List<CategoryModel> category =
-              List.from(data).map((e) => CategoryModel.fromJson(e)).toList();
-          _categoryVM.populate(category);
-        }
-        return;
-      });
+      await http
+          .get(
+            "${Network.api}/front/category/list".toUrl,
+            headers: {
+              "Accepts": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+          )
+          .then((response) {
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              var data = json.decode(response.body);
+              List<CategoryModel> category =
+                  List.from(
+                    data,
+                  ).map((e) => CategoryModel.fromJson(e)).toList();
+              _categoryVM.populate(category);
+            }
+            return;
+          });
     } catch (e, s) {
       print("ERROR CATEGORY DISPLAY: $e");
       print("$s");
@@ -109,18 +129,23 @@ class MenuApi {
 
   Future<void> getProduct() async {
     try {
-      await http.get("${Network.api}/front/product/list".toUrl, headers: {
-        "Accepts": "application/json",
-        HttpHeaders.authorizationHeader: "Bearer $accesstoken"
-      }).then((response) {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          var data = json.decode(response.body);
-          List<ProductModel> product =
-              List.from(data).map((e) => ProductModel.fromJson(e)).toList();
-          _productVM.populate(product);
-        }
-        return;
-      });
+      await http
+          .get(
+            "${Network.api}/front/product/list".toUrl,
+            headers: {
+              "Accepts": "application/json",
+              HttpHeaders.authorizationHeader: "Bearer $accesstoken",
+            },
+          )
+          .then((response) {
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              var data = json.decode(response.body);
+              List<ProductModel> product =
+                  List.from(data).map((e) => ProductModel.fromJson(e)).toList();
+              _productVM.populate(product);
+            }
+            return;
+          });
     } catch (e, s) {
       print("ERROR PRODUCT DISPLAY: $e");
       print("$s");

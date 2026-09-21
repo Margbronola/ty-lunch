@@ -66,7 +66,7 @@ class PaymentAPI {
 
       return http
           .post(
-            "${Network.api}/front/order/pay-with-bank".toUrl,
+            "${Network.api}/test/front/order/pay-with-bank".toUrl,
             headers: {
               "Accept": "application/json",
               'Content-Type': "application/json",

@@ -578,7 +578,7 @@ class _WebViewPageState extends State<WebViewPage> {
           },
         ),
       )
-      ..loadHtmlString(widget.htmlpage);
+      ..loadHtmlString(widget.htmlpage, baseUrl: Network.url);
 
     if (controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
