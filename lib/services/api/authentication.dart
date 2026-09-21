@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:convert';
 import "package:http/http.dart" as http;
 import 'package:tylunch/model/user.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:tylunch/extension/string.dart';
 import 'package:tylunch/global/container.dart';
 import 'package:tylunch/global/datacacher.dart';
@@ -37,7 +37,7 @@ class Authentication {
           _cacher.token = accesstoken;
           return data['access_token'];
         }
-        Fluttertoast.showToast(msg: "Compte non trouvé");
+        showError(msg: "Compte non trouvé");
         print(
             "NAGKA ERROR DIDI LOGIN: ${response.statusCode} ${response.body}");
         return null;
@@ -278,7 +278,7 @@ class Authentication {
           return "exist";
         }
 
-        Fluttertoast.showToast(msg: "Le code n'existe pas");
+        showError(msg: "Le code n'existe pas");
         return "not exist";
       });
     } catch (e) {

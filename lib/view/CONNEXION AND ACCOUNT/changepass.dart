@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import '../../global/color.dart';
 import '../../global/validator.dart';
 import '../../global/widget.dart';
@@ -181,7 +181,7 @@ final ChangePassword cp = ChangePassword();
                                         if (value == true) {
                                           setState(() {
                                             isloading = false;
-                                            Fluttertoast.showToast(
+                                            showToast(
                                                 msg: "Mot de passe modifié");
                                           });
                                         }

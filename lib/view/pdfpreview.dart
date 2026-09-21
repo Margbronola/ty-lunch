@@ -3,7 +3,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:lecle_downloads_path_provider/lecle_downloads_path_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
@@ -28,7 +28,7 @@ class _PdfPreviewPageState extends State<PdfPreviewPage> {
           ? await DownloadsPath.downloadsDirectory()
           : await getApplicationDocumentsDirectory();
       if (tempDir == null) {
-        Fluttertoast.showToast(msg: "Impossible aux afficher les PDF");
+        showError(msg: "Impossible aux afficher les PDF");
         return;
       }
       File file = await File(
@@ -39,7 +39,7 @@ class _PdfPreviewPageState extends State<PdfPreviewPage> {
       if (mounted) setState(() {});
     } catch (e) {
       print("SS : $e");
-      Fluttertoast.showToast(msg: "Impossible aux afficher les PDF");
+      showError(msg: "Impossible aux afficher les PDF");
     }
   }
 

@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison, avoid_print
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:tylunch/global/color.dart';
 import 'package:tylunch/global/widget.dart';
@@ -102,7 +102,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                         .then((value) {
                                       print("SULOD SA VALUE: $value");
                                       if (value == false) {
-                                        Fluttertoast.showToast(
+                                        showError(
                                             msg:
                                                 "Le compte n'a pas été trouvé");
                                         return;

@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tylunch/global/color.dart';
@@ -107,7 +107,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   //       setState(() {
   //         isloading = false;
   //       });
-  //       Fluttertoast.showToast(msg: "Compte créé avec succès");
+  //       showError(msg: "Compte créé avec succès");
   //       Navigator.pushNamed(context, '/landing_page');
   //     } else {
   //       setState(() {
@@ -589,7 +589,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                             setState(() {
                                               isloading = false;
                                             });
-                                            Fluttertoast.showToast(
+                                            showToast(
                                                 msg: "Compte créé avec succès");
                                             Navigator.pushNamed(
                                                 context, '/landing_page');
@@ -598,7 +598,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                             setState(() {
                                               isloading = false;
                                             });
-                                            Fluttertoast.showToast(
+                                            showError(
                                                 msg:
                                                     "Erreur lors de la création du compte");
                                             return;
@@ -606,7 +606,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         });
                                       } else {
                                         print("not exist");
-                                        Fluttertoast.showToast(
+                                        showError(
                                             msg: "le code n'existe pas");
                                       }
                                     });

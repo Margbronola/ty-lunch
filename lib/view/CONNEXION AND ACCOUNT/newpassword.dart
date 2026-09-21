@@ -2,7 +2,7 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:tylunch/global/color.dart';
 import 'package:tylunch/global/validator.dart';
@@ -184,13 +184,13 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                                       if (value == false) {
                                         setState(() {
                                           isloading = false;
-                                          Fluttertoast.showToast(msg: "$value");
+                                          showError(msg: "$value");
                                         });
                                         return;
                                       } else {
                                         setState(() {
                                           isloading = false;
-                                          Fluttertoast.showToast(
+                                          showToast(
                                               msg:
                                                   "Votre mot de passe a été mis à jour avec succès");
                                         });
@@ -206,7 +206,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                                     });
                                     // .whenComplete(() => setState(() {
                                     //       isloading = false;
-                                    //       Fluttertoast.showToast(
+                                    //       showError(
                                     //           msg:
                                     //               "Votre mot de passe a été mis à jour avec succès");
                                     //     }));

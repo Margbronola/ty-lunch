@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:tylunch/model/product.dart';
 import 'package:tylunch/extension/date.dart';
 import 'package:tylunch/extension/list.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 
 class MenuDetailPage extends StatefulWidget {
   ProductModel prod;
@@ -253,7 +253,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                                       if (remainingStocks <= 0) {
                                         print(
                                             "REMAINING STOCKS: $remainingStocks");
-                                        Fluttertoast.showToast(
+                                        showWarning(
                                             msg: "quantité dépassée");
                                         return;
                                       }
@@ -263,7 +263,7 @@ class _MenuDetailPageState extends State<MenuDetailPage> {
                               }
                               if (widget.prod.stock < qty) {
                                 print("OUT OF STOCK");
-                                Fluttertoast.showToast(
+                                showWarning(
                                     msg:
                                         "Plus disponible, stock disponible ${widget.prod.stock}");
                               } else {

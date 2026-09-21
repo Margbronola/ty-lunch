@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:html/parser.dart';
 import 'package:tylunch/global/color.dart';
 import 'package:tylunch/global/container.dart';
@@ -79,16 +79,54 @@ class _PaymentPageState extends State<PaymentPage> {
   // cover the total, answers with the bank form for the remainder. Without credit
   // the whole amount goes to the bank.
   Future<void> _confirmPayment() async {
-    final bool hasPoints = (loggedUser!.points ?? 0) > 0;
-    final String? body =
-        hasPoints
-            ? await payment.payWithPoints(data: checkout, ncdata: widget.cart)
-            : await payment.payWithBank(data: checkout);
+    // final bool hasPoints = (loggedUser!.points ?? 0) > 0;
+    // hasPoints
+    //     ? print("PAYMENT METHOD: ${loggedUser!.points}credit points")
+    //     : print("PAYMENT METHOD: bank");
+    // // final String? body =
+    // //     hasPoints
+    // //         ? await payment.payWithPoints(data: checkout, ncdata: widget.cart)
+    // //         : await payment.payWithBank(data: checkout);
 
-    print("PAYMENT BODY: $body");
+    final double userPoints =
+        double.tryParse('${loggedUser?.points ?? 0}') ?? 0.0;
+
+    final double totalAmount =
+        double.tryParse('${checkout.subTotal ?? 0}') ?? 0.0;
+
+    print("Subtotal: ${checkout.subTotal}");
+
+    String? body;
+
+    if (userPoints <= 0) {
+      // No credit points
+      print('PAYMENT METHOD: bank');
+
+      body = await payment.payWithBank(data: checkout);
+    } else if (userPoints >= totalAmount) {
+      // Points are enough to pay the entire amount
+      print(
+        'PAYMENT METHOD: credit points '
+        '(${userPoints.toStringAsFixed(2)} points)',
+      );
+
+      body = await payment.payWithPoints(data: checkout, ncdata: widget.cart);
+    } else {
+      // Points are not enough, use points + bank
+      final double remainingAmount = totalAmount - userPoints;
+
+      print(
+        'PAYMENT METHOD: bank + credit points '
+        '| Points: $userPoints '
+        '| Total: $totalAmount '
+        '| Remaining bank: $remainingAmount',
+      );
+
+      body = await payment.payWithBankAndPoints(data: checkout);
+    }
     if (!mounted) return;
     if (body == null) {
-      Fluttertoast.showToast(msg: "Le paiement a échoué");
+      showError(msg: "Le paiement a échoué");
       return;
     }
     if (!body.trimLeft().startsWith("{")) {
@@ -107,15 +145,11 @@ class _PaymentPageState extends State<PaymentPage> {
       _showOutOfStock(body);
       return;
     }
-    Fluttertoast.showToast(
-      msg: json["message"]?.toString() ?? "Le paiement a échoué",
-    );
+    showError(msg: json["message"]?.toString() ?? "Le paiement a échoué");
   }
 
   void _openBankForm(String html) {
     final document = parse(html);
-    print("DOCUMENT OUTER HTML: ${document}");
-    print("SELECTED CONNECS: $selectedConnects");
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -123,7 +157,7 @@ class _PaymentPageState extends State<PaymentPage> {
             (context) => WebViewPage(
               htmlpage: document.outerHtml,
               cart: widget.cart,
-              selectedconnecs: "bank",
+              selectedconnecs: selectedConnects,
             ),
       ),
     );
@@ -614,12 +648,12 @@ class _PaymentPageState extends State<PaymentPage> {
                             //               onPressed: () async {
                             //                 if (greater == true) {
                             //                   print("insuffisant balance");
-                            //                   Fluttertoast.showToast(
+                            //                   showError(
                             //                       msg: "Crédit insuffisant");
                             //                 } else if (_selected1 == false) {
                             //                   print(
                             //                       "need to accept conditions");
-                            //                   Fluttertoast.showToast(
+                            //                   showError(
                             //                       msg:
                             //                           "accepter les conditions générales de vente");
                             //                 } else {
@@ -905,7 +939,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                                     print(
                                                       "need to accept conditions",
                                                     );
-                                                    Fluttertoast.showToast(
+                                                    showWarning(
                                                       msg:
                                                           "accepter les conditions générales de vente",
                                                     );
@@ -1137,13 +1171,13 @@ class _PaymentPageState extends State<PaymentPage> {
                                               print(
                                                 "need to accept conditions",
                                               );
-                                              Fluttertoast.showToast(
+                                              showWarning(
                                                 msg:
                                                     "accepter les conditions générales de vente",
                                               );
                                             } else if (conecsIndex == null) {
                                               print("need to select cards");
-                                              Fluttertoast.showToast(
+                                              showWarning(
                                                 msg:
                                                     "choisissez parmi les cartes acceptées",
                                               );
