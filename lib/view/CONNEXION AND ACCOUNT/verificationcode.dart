@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:tylunch/global/color.dart';
 import 'package:tylunch/global/widget.dart';
@@ -115,7 +115,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                               ),
                               onPressed: () async {
                                 if (otp.isEmpty) {
-                                  Fluttertoast.showToast(
+                                  showWarning(
                                       msg: "Entrez le code de vérification");
                                   return;
                                 } else {
@@ -127,7 +127,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                                       .then((value) {
                                     print("SULOD SA VALUE: $value");
                                     if (value == false) {
-                                      Fluttertoast.showToast(
+                                      showError(
                                           msg: "Code de validation non valide");
                                       return;
                                     }

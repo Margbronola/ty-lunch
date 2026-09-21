@@ -116,7 +116,7 @@ class _AccountDeletionPageState extends State<AccountDeletionPage> {
                                       );
                                       // setState(() {
                                       //   isloading = false;
-                                      //   Fluttertoast.showToast(
+                                      //   showError(
                                       //       msg: "Mot de passe modifié");
                                       // });
                                     }

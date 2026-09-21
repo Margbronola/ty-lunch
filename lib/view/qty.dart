@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:intl/intl.dart';
 import 'package:tylunch/extension/date.dart';
 import 'package:tylunch/extension/list.dart';
@@ -249,7 +249,7 @@ class _QtyPageState extends State<QtyPage> {
                   print("DIRI TIKANG SA CART");
                   if (widget.prod!.stock < widget.georgettesQty) {
                     print("OUT OF STOCK");
-                    Fluttertoast.showToast(
+                    showWarning(
                         msg:
                             "Plus disponible, stock disponible ${widget.prod!.stock}");
                   } else {
@@ -367,17 +367,17 @@ class _QtyPageState extends State<QtyPage> {
                   print("PRODUCCTTTT STOCK: ${widget.prodStock}");
                   if (widget.prodStock! < currentqty) {
                     print("CURRENT QTY: $currentqty");
-                    Fluttertoast.showToast(msg: "quantité dépassée");
+                    showWarning(msg: "quantité dépassée");
                     return;
                   } else if (widget.prodStock! < widget.formulaQty) {
                     print("OUT OF STOCK");
-                    Fluttertoast.showToast(
+                    showWarning(
                         msg:
                             "Plus disponible, stock disponible ${widget.prodStock!}");
                     return;
                   } else if (widget.prodStock! < widget.individualQty) {
                     print("OUT OF STOCK");
-                    Fluttertoast.showToast(
+                    showWarning(
                         msg:
                             "Plus disponible, stock disponible ${widget.prodStock!}");
                     return;
@@ -399,7 +399,7 @@ class _QtyPageState extends State<QtyPage> {
                                   cartId: int.parse(widget.cartId.toString()))
                               .then((value) async {
                             await db.retrieve();
-                            Fluttertoast.showToast(msg: " élément supprimé ");
+                            showToast(msg: " élément supprimé ");
                             Navigator.of(context).pop();
                             if (mounted) setState(() {});
                           });
@@ -565,7 +565,7 @@ class _QtyPageState extends State<QtyPage> {
                               cartId: int.parse(widget.cartId.toString()));
                           Navigator.of(context).pop();
                           await db.retrieve();
-                          Fluttertoast.showToast(msg: " élément supprimé ");
+                          showToast(msg: " élément supprimé ");
                           if (mounted) setState(() {});
                         } else {
                           print("ADD/SUBTRACT THE PRODUCT WITHOUT FORMULA");

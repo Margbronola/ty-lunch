@@ -8,6 +8,7 @@ import 'package:tylunch/view/home.dart';
 import 'package:tylunch/view/landing.dart';
 import 'package:tylunch/view/CONNEXION%20AND%20ACCOUNT/login.dart';
 import 'package:tylunch/splashscreen.dart';
+import 'package:tylunch/global/toast.dart';
 import 'view/CONNEXION AND ACCOUNT/auth.dart';
 
 class TyLunchApp extends StatelessWidget {
@@ -16,6 +17,7 @@ class TyLunchApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        navigatorKey: navigatorKey,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

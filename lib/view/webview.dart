@@ -1,10 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:tylunch/global/color.dart';
 import 'package:tylunch/global/dialog.dart';
-import 'package:tylunch/global/network.dart';
 import 'package:tylunch/model/cartprod.dart';
 import 'package:tylunch/services/api/payment.dart';
 import 'package:tylunch/view/landing.dart';
@@ -34,6 +33,55 @@ class _WebViewPageState extends State<WebViewPage> {
   final DatabaseServices db = DatabaseServices.instance;
   final PaymentAPI _paymentAPI = PaymentAPI();
   late final WebViewController _controller;
+  // onPageFinished can fire more than once for the same page.
+  bool _finished = false;
+
+  // The bank redirect only says where the bank sent us. Whether an order exists
+  // is the backend's call, so ask it before showing the confirmation.
+  Future<void> _confirmOrder(String? reference) async {
+    if (_finished) return;
+    _finished = true;
+    bool paid = false;
+    // The bank's server-to-server call may still be creating the order.
+    for (int attempt = 0; attempt < 3 && !paid; attempt++) {
+      if (attempt > 0) await Future.delayed(const Duration(seconds: 2));
+      paid = await _paymentAPI.orderPaid(reference: reference ?? "");
+    }
+    if (!mounted) return;
+    if (!paid) {
+      showError(
+        msg:
+            "Le paiement n'a pas pu être confirmé. Vérifiez vos commandes avant de payer à nouveau.",
+        toastLength: Toast.LENGTH_LONG,
+      );
+      _goHome();
+      return;
+    }
+    for (NewCartModel cart in widget.cart) {
+      for (CartProduct prod in cart.products) {
+        db.deleteProduct(prodId: prod.productId, cartId: cart.id);
+      }
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PaymentSuccessfulPage()),
+    );
+  }
+
+  void _finishCancelled() {
+    if (_finished) return;
+    _finished = true;
+    showToast(msg: "Commande annulée");
+    _goHome();
+  }
+
+  void _goHome() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
+      (Route<dynamic> route) => false,
+    );
+  }
 
   @override
   void initState() {
@@ -161,14 +209,14 @@ class _WebViewPageState extends State<WebViewPage> {
             //     });
             //   } else if (url.contains("session/logout")) {
             //     print("ORDER  CANCEL");
-            //     Fluttertoast.showToast(msg: "Commande annulée");
+            //     showError(msg: "Commande annulée");
             //     Navigator.pushAndRemoveUntil(
             //         context,
             //         MaterialPageRoute(
             //             builder: (context) => LandingPage(ind: 2)),
             //         (Route<dynamic> route) => false);
             //   // } else {
-            //     // Fluttertoast.showToast(
+            //     // showError(
             //     //     msg:
             //     //         "Une erreur s'est produite lors de l'exécution de cette opération");
             //     // Navigator.pushAndRemoveUntil(
@@ -290,7 +338,7 @@ class _WebViewPageState extends State<WebViewPage> {
                             ),
                           );
                         } else {
-                          Fluttertoast.showToast(
+                          showError(
                             msg:
                                 "Une erreur s'est produite lors de l'exécution de cette opération",
                           );
@@ -306,7 +354,7 @@ class _WebViewPageState extends State<WebViewPage> {
                 });
               } else if (url.contains("session/logout")) {
                 print("ORDER  CANCEL");
-                Fluttertoast.showToast(msg: "Commande annulée");
+                showToast(msg: "Commande annulée");
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
@@ -461,7 +509,7 @@ class _WebViewPageState extends State<WebViewPage> {
                                           ),
                                         );
                                       } else {
-                                        Fluttertoast.showToast(
+                                        showError(
                                           msg:
                                               "${payValue?['display_message']}",
                                         );
@@ -479,7 +527,7 @@ class _WebViewPageState extends State<WebViewPage> {
                               } else {
                                 print("CHECK SWILE BALANCE FALSE");
 
-                                Fluttertoast.showToast(
+                                showError(
                                   msg: "${balanceValue?['display_message']}",
                                 );
                                 Navigator.pushAndRemoveUntil(
@@ -494,7 +542,7 @@ class _WebViewPageState extends State<WebViewPage> {
                       } else {
                         print("SWILE TOKEN FALSE");
 
-                        Fluttertoast.showToast(
+                        showError(
                           msg: "${value?['display_message'] ?? ""}",
                         );
                         Navigator.pushAndRemoveUntil(
@@ -508,7 +556,7 @@ class _WebViewPageState extends State<WebViewPage> {
                     });
               } else if (url.contains("session/logout")) {
                 print("ORDER  CANCEL");
-                Fluttertoast.showToast(msg: "Commande annulée");
+                showToast(msg: "Commande annulée");
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => LandingPage(ind: 2)),
@@ -516,44 +564,15 @@ class _WebViewPageState extends State<WebViewPage> {
                 );
               }
             } else {
-              // if (url.contains("https://back.tylunch.studioseizh.com")) {
-              if (url.contains(Network.url)) {
-                // url.contains("https://recette-tpeweb.e-transactions.fr/php/")) {
-                // if (url.contains("https://admin.ty-lunch.fr")) {
-                print("SA IF SUMULOD");
-                if (url.contains(
-                  // "https://admin.ty-lunch.fr/api/front/order/payment/status-cancel")) {
-                  "${Network.api}/front/order/payment/status-cancel",
-                )) {
-                  // "https://tylunch.studioseizh.com/api/front/order/payment/status-cancel")) {
-                  print("ORDER  CANCEL");
-                  Fluttertoast.showToast(msg: "Commande annulée");
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LandingPage(ind: 2),
-                    ),
-                    (Route<dynamic> route) => false,
-                  );
-                } else {
-                  print("ORDER  SUCCESS");
-                  print("URL RETURN: $url");
-
-                  for (NewCartModel cart in widget.cart) {
-                    for (CartProduct prod in cart.products) {
-                      /// delete product
-                      db.deleteProduct(prodId: prod.productId, cartId: cart.id);
-                    }
-                  }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PaymentSuccessfulPage(),
-                    ),
-                  );
-                }
-              } else {
-                print("SA ELSE SUMULOD");
+              // Match on the path only: a host mismatch must not decide
+              // whether the customer gets a confirmation.
+              final Uri returned = Uri.parse(url);
+              if (returned.path.endsWith("/front/order/payment/status-cancel")) {
+                _finishCancelled();
+              } else if (returned.path.endsWith(
+                "/front/order/payment/status-success",
+              )) {
+                _confirmOrder(returned.queryParameters["Ref"]);
               }
             }
           },

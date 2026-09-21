@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tylunch/global/toast.dart';
 import 'package:tylunch/global/color.dart';
 import 'package:tylunch/global/container.dart';
 import 'package:tylunch/global/datacacher.dart';
@@ -86,7 +86,7 @@ class _LandingPageState extends State<LandingPage> {
         if (mounted) setState(() {});
         return;
       }
-      await Fluttertoast.showToast(
+      showError(
         msg: "Utilisateur non trouvé, veuillez reinscrire",
       );
       _cacher.deleteToken();
