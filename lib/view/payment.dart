@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, deprecated_member_use
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:tylunch/model/cartprod.dart';
 import 'package:tylunch/model/newcart.dart';
 import 'package:tylunch/services/api/order.dart';
 import 'package:tylunch/view/landing.dart';
+import 'package:tylunch/view/paymentsuccessful.dart';
 import 'package:tylunch/view/webview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -73,6 +75,125 @@ class _PaymentPageState extends State<PaymentPage> {
     }
   }
 
+  // With credit on the account the backend spends it first and, when it does not
+  // cover the total, answers with the bank form for the remainder. Without credit
+  // the whole amount goes to the bank.
+  Future<void> _confirmPayment() async {
+    final bool hasPoints = (loggedUser!.points ?? 0) > 0;
+    final String? body =
+        hasPoints
+            ? await payment.payWithPoints(data: checkout, ncdata: widget.cart)
+            : await payment.payWithBank(data: checkout);
+
+    print("PAYMENT BODY: $body");
+    if (!mounted) return;
+    if (body == null) {
+      Fluttertoast.showToast(msg: "Le paiement a échoué");
+      return;
+    }
+    if (!body.trimLeft().startsWith("{")) {
+      _openBankForm(body);
+      return;
+    }
+    final Map<String, dynamic> json = jsonDecode(body);
+    if (json.containsKey("created")) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PaymentSuccessfulPage()),
+      );
+      return;
+    }
+    if (json["message"] == "not_enough_quantity" || json["stocks"] == false) {
+      _showOutOfStock(body);
+      return;
+    }
+    Fluttertoast.showToast(
+      msg: json["message"]?.toString() ?? "Le paiement a échoué",
+    );
+  }
+
+  void _openBankForm(String html) {
+    final document = parse(html);
+    print("DOCUMENT OUTER HTML: ${document}");
+    print("SELECTED CONNECS: $selectedConnects");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => WebViewPage(
+              htmlpage: document.outerHtml,
+              cart: widget.cart,
+              selectedconnecs: "bank",
+            ),
+      ),
+    );
+  }
+
+  void _showOutOfStock(String body) {
+    for (NewCartModel newcart in widget.cart) {
+      for (CartProduct cp in newcart.products) {
+        if (body.contains(cp.productId.toString())) {
+          outOfStockProduct = cp.name;
+        }
+      }
+    }
+    MyDialog().scaleDialog(
+      context,
+      child: Material(
+        color: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(color: Colors.white),
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    "Pas assez de quantité pour: $outOfStockProduct",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18, color: kcPrimary),
+                  ),
+                ),
+                const SizedBox(height: 40),
+                Container(
+                  height: 55,
+                  width: 300,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kcPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(90),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LandingPage(ind: 2),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: Text(
+                      "annuler".toUpperCase(),
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -92,8 +213,6 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    bool greater = widget.selected[0].subTotal > loggedUser!.points!.toDouble();
-    print("GREATER: $greater");
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -791,364 +910,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                                           "accepter les conditions générales de vente",
                                                     );
                                                   }
-                                                  : () async {
-                                                    loggedUser!.points !=
-                                                                0.00 &&
-                                                            greater == false
-                                                        ? await payment
-                                                            .payWithPoints(
-                                                              data: checkout,
-                                                              ncdata:
-                                                                  widget.cart,
-                                                            )
-                                                            .whenComplete(() {
-                                                              MyDialog().scaleDialog(
-                                                                context,
-                                                                child: Material(
-                                                                  color:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  elevation: 0,
-                                                                  child: Container(
-                                                                    width: 300,
-                                                                    height: 350,
-                                                                    decoration: const BoxDecoration(
-                                                                      color:
-                                                                          Colors
-                                                                              .white,
-                                                                      borderRadius: BorderRadius.only(
-                                                                        topLeft:
-                                                                            Radius.circular(
-                                                                              5,
-                                                                            ),
-                                                                        topRight:
-                                                                            Radius.circular(
-                                                                              5,
-                                                                            ),
-                                                                        bottomLeft:
-                                                                            Radius.circular(
-                                                                              10,
-                                                                            ),
-                                                                        bottomRight:
-                                                                            Radius.circular(
-                                                                              10,
-                                                                            ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            })
-                                                        // : loggedUser!.points !=
-                                                        //             0.00 &&
-                                                        //         greater == true
-                                                        //     ? await payment
-                                                        //         .payWithBankAndPoints(
-                                                        //             data:
-                                                        //                 checkout)
-                                                        //         .then(
-                                                        //         (value) {
-                                                        //           if (value !=
-                                                        //               null) {
-                                                        //             print(
-                                                        //                 "HTML DOCUMENTS");
-                                                        //             print(
-                                                        //                 "PAY WITH BANK AND POINTS: $value");
-                                                        //             if (value.contains(
-                                                        //                     "not_enough_quantity") ||
-                                                        //                 value.contains(
-                                                        //                     "false")) {
-                                                        //               for (NewCartModel newcart
-                                                        //                   in widget
-                                                        //                       .cart) {
-                                                        //                 print(
-                                                        //                     "sumulod sine na condition");
-                                                        //                 for (CartProduct cp
-                                                        //                     in newcart.products) {
-                                                        //                   print(
-                                                        //                       "sumulod sine na condition 1");
-                                                        //                   if (value.contains(cp
-                                                        //                       .productId
-                                                        //                       .toString())) {
-                                                        //                     print("sumulod sine na condition 2");
-                                                        //                     print("PRODUCT ID: ${cp.productId} = $value");
-                                                        //                     outOfStockProduct =
-                                                        //                         cp.name;
-                                                        //                   }
-                                                        //                 }
-                                                        //               }
-                                                        //               MyDialog()
-                                                        //                   .scaleDialog(
-                                                        //                 context,
-                                                        //                 child:
-                                                        //                     Material(
-                                                        //                   color:
-                                                        //                       Colors.transparent,
-                                                        //                   elevation:
-                                                        //                       0,
-                                                        //                   child:
-                                                        //                       Container(
-                                                        //                     width:
-                                                        //                         double.infinity,
-                                                        //                     height:
-                                                        //                         double.infinity,
-                                                        //                     decoration:
-                                                        //                         const BoxDecoration(
-                                                        //                       color: Colors.white,
-                                                        //                     ),
-                                                        //                     child:
-                                                        //                         Padding(
-                                                        //                       padding: const EdgeInsets.all(30),
-                                                        //                       child: Column(
-                                                        //                         mainAxisAlignment: MainAxisAlignment.center,
-                                                        //                         children: [
-                                                        //                           const SizedBox(height: 20),
-                                                        //                           Center(
-                                                        //                             child: Text(
-                                                        //                               "Pas assez de quantité pour: $outOfStockProduct",
-                                                        //                               textAlign: TextAlign.center,
-                                                        //                               style: const TextStyle(fontSize: 18, color: kcPrimary),
-                                                        //                             ),
-                                                        //                           ),
-                                                        //                           const SizedBox(height: 40),
-                                                        //                           Container(
-                                                        //                             height: 55,
-                                                        //                             width: 300,
-                                                        //                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                        //                             child: ElevatedButton(
-                                                        //                               style: ElevatedButton.styleFrom(
-                                                        //                                 backgroundColor: kcPrimary,
-                                                        //                                 shape: RoundedRectangleBorder(
-                                                        //                                   borderRadius: BorderRadius.circular(90),
-                                                        //                                 ),
-                                                        //                               ),
-                                                        //                               onPressed: () {
-                                                        //                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LandingPage(ind: 2)), (Route<dynamic> route) => false);
-                                                        //                               },
-                                                        //                               child: Text(
-                                                        //                                 "annuler".toUpperCase(),
-                                                        //                                 style: const TextStyle(
-                                                        //                                   color: Colors.white,
-                                                        //                                   fontSize: 14,
-                                                        //                                 ),
-                                                        //                               ),
-                                                        //                             ),
-                                                        //                           ),
-                                                        //                         ],
-                                                        //                       ),
-                                                        //                     ),
-                                                        //                   ),
-                                                        //                 ),
-                                                        //               );
-                                                        //             } else {
-                                                        //               print(
-                                                        //                   "HTML DOCUMENTS");
-                                                        //               debugPrint(
-                                                        //                   "RETURN FROM PAYMENT: $value");
-                                                        //               var document =
-                                                        //                   parse(
-                                                        //                       value);
-                                                        //               debugPrint(
-                                                        //                   "HTML DOC : ${document.outerHtml}");
-                                                        //               Navigator
-                                                        //                   .push(
-                                                        //                 context,
-                                                        //                 MaterialPageRoute(
-                                                        //                   builder: (context) =>
-                                                        //                       WebViewPage(
-                                                        //                     htmlpage:
-                                                        //                         document.outerHtml,
-                                                        //                     cart:
-                                                        //                         widget.cart,
-                                                        //                     selectedconnecs:
-                                                        //                         selectedConnects,
-                                                        //                   ),
-                                                        //                 ),
-                                                        //               );
-                                                        //             }
-                                                        //           }
-                                                        //         },
-                                                        //       )
-                                                        : await payment.payWithBank(data: checkout).then((
-                                                          value,
-                                                        ) {
-                                                          if (value != null) {
-                                                            print(
-                                                              "HTML DOCUMENTS",
-                                                            );
-                                                            if (value.contains(
-                                                                  "not_enough_quantity",
-                                                                ) ||
-                                                                value.contains(
-                                                                  "false",
-                                                                )) {
-                                                              print(
-                                                                "PAY WITH BANK: $value",
-                                                              );
-                                                              for (NewCartModel
-                                                                  newcart
-                                                                  in widget
-                                                                      .cart) {
-                                                                print(
-                                                                  "sumulod sine na condition",
-                                                                );
-                                                                for (CartProduct
-                                                                    cp
-                                                                    in newcart
-                                                                        .products) {
-                                                                  print(
-                                                                    "sumulod sine na condition 1",
-                                                                  );
-                                                                  if (value.contains(
-                                                                    cp.productId
-                                                                        .toString(),
-                                                                  )) {
-                                                                    print(
-                                                                      "sumulod sine na condition 2",
-                                                                    );
-                                                                    print(
-                                                                      "PRODUCT ID: ${cp.productId} = $value",
-                                                                    );
-                                                                    outOfStockProduct =
-                                                                        cp.name;
-                                                                  }
-                                                                }
-                                                              }
-                                                              MyDialog().scaleDialog(
-                                                                context,
-                                                                child: Material(
-                                                                  color:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  elevation: 0,
-                                                                  child: Container(
-                                                                    width:
-                                                                        double
-                                                                            .infinity,
-                                                                    height:
-                                                                        double
-                                                                            .infinity,
-                                                                    decoration:
-                                                                        const BoxDecoration(
-                                                                          color:
-                                                                              Colors.white,
-                                                                        ),
-                                                                    child: Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                            30,
-                                                                          ),
-                                                                      child: Column(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.center,
-                                                                        children: [
-                                                                          const SizedBox(
-                                                                            height:
-                                                                                20,
-                                                                          ),
-                                                                          Center(
-                                                                            child: Text(
-                                                                              "Pas assez de quantité pour: $outOfStockProduct",
-                                                                              textAlign:
-                                                                                  TextAlign.center,
-                                                                              style: const TextStyle(
-                                                                                fontSize:
-                                                                                    18,
-                                                                                color:
-                                                                                    kcPrimary,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          const SizedBox(
-                                                                            height:
-                                                                                40,
-                                                                          ),
-                                                                          Container(
-                                                                            height:
-                                                                                55,
-                                                                            width:
-                                                                                300,
-                                                                            padding: const EdgeInsets.symmetric(
-                                                                              horizontal:
-                                                                                  20,
-                                                                            ),
-                                                                            child: ElevatedButton(
-                                                                              style: ElevatedButton.styleFrom(
-                                                                                backgroundColor:
-                                                                                    kcPrimary,
-                                                                                shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(
-                                                                                    90,
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              onPressed: () {
-                                                                                Navigator.pushAndRemoveUntil(
-                                                                                  context,
-                                                                                  MaterialPageRoute(
-                                                                                    builder:
-                                                                                        (
-                                                                                          context,
-                                                                                        ) => LandingPage(
-                                                                                          ind:
-                                                                                              2,
-                                                                                        ),
-                                                                                  ),
-                                                                                  (
-                                                                                    Route<
-                                                                                      dynamic
-                                                                                    >
-                                                                                    route,
-                                                                                  ) =>
-                                                                                      false,
-                                                                                );
-                                                                              },
-                                                                              child: Text(
-                                                                                "annuler".toUpperCase(),
-                                                                                style: const TextStyle(
-                                                                                  color:
-                                                                                      Colors.white,
-                                                                                  fontSize:
-                                                                                      14,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            } else {
-                                                              debugPrint(
-                                                                "RETURN FROM PAYMENT: $value",
-                                                              );
-                                                              var document =
-                                                                  parse(value);
-                                                              debugPrint(
-                                                                "HTML DOC : ${document.outerHtml}",
-                                                              );
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (
-                                                                        context,
-                                                                      ) => WebViewPage(
-                                                                        htmlpage:
-                                                                            document.outerHtml,
-                                                                        cart:
-                                                                            widget.cart,
-                                                                        selectedconnecs:
-                                                                            selectedConnects,
-                                                                      ),
-                                                                ),
-                                                              );
-                                                            }
-                                                          }
-                                                        });
-                                                  },
+                                                  : () => _confirmPayment(),
                                           child: const Text(
                                             "CONFIRMER",
                                             style: TextStyle(

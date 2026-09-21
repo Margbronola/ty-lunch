@@ -68,7 +68,7 @@ class PaymentAPI {
 
       return http
           .post(
-            "${Network.api}/front/order/pay-with-bank".toUrl,
+            "${Network.api}/test/front/order/pay-with-bank".toUrl,
             headers: {
               "Accept": "application/json",
               'Content-Type': "application/json",
@@ -81,13 +81,9 @@ class PaymentAPI {
           .then((response) {
             print("SUMULOD DIDI");
             print("PAYMENT STATUSCODE : ${response.statusCode}");
-            if (response.statusCode == 200 || response.statusCode == 201) {
-              print("PAY WITH BANK DATA");
-              // print("PAYMENT WITH BANK: ${jsonDecode(response.body['errors'][])}");
-              debugPrint("PAYMENT BODY : ${response.body}");
-              return response.body;
-            }
-            return null;
+            debugPrint("PAYMENT BODY : ${response.body}");
+            // Error bodies are returned too so the screen can show the server's message.
+            return response.body;
           });
     } catch (e, s) {
       print("ERROR PAYMENT DISPLAY: $e");
@@ -218,42 +214,39 @@ class PaymentAPI {
         "use_packaging": data.usePackaging.toString(),
         "items": item,
         "source": "mobile",
+        // Spend the whole balance and get the bank form back for the remainder
+        // instead of a 400 when the credit does not cover the total.
+        "split_payment": 1,
       };
-      await http
-          .post(
-            "${Network.api}/front/order/proceed".toUrl,
-            headers: {
-              "Accept": "application/json",
-              'Content-Type': "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Cache-Control": "no-cache, private",
-              "Authorization": "Bearer $accesstoken",
-            },
-            body: jsonEncode(payload),
-          )
-          .then((response) {
-            print("SUMULOD DIDI");
-            print("PAYMENT STATUSCODE : ${response.statusCode}");
-            debugPrint("PAYMENT BODY : ${response.body}");
-            if (response.statusCode == 200 || response.statusCode == 201) {
-              print("PAY WITH POINTS DATA");
-              for (NewCartModel cart in ncdata) {
-                for (CartProduct prod in cart.products) {
-                  /// delete product
-                  db.deleteProduct(prodId: prod.productId, cartId: cart.id);
-                }
-              }
-              db.retrieve();
-              return response.body;
-            }
-            return null;
-          });
+      final response = await http.post(
+        "${Network.api}/front/order/proceed".toUrl,
+        headers: {
+          "Accept": "application/json",
+          'Content-Type': "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "no-cache, private",
+          "Authorization": "Bearer $accesstoken",
+        },
+        body: jsonEncode(payload),
+      );
+      print("PAYMENT STATUSCODE : ${response.statusCode}");
+      debugPrint("PAYMENT BODY : ${response.body}");
+      // 201 means the order was paid with credit only. 200 carries the bank form
+      // for the remainder, so the cart must survive until the bank confirms.
+      if (response.statusCode == 201) {
+        for (NewCartModel cart in ncdata) {
+          for (CartProduct prod in cart.products) {
+            db.deleteProduct(prodId: prod.productId, cartId: cart.id);
+          }
+        }
+        db.retrieve();
+      }
+      return response.body;
     } catch (e, s) {
       print("ERROR PAYMENT DISPLAY: $e");
       print("$s");
       return null;
     }
-    return null;
   }
 
   Future<String?> payWithConecs({
@@ -550,6 +543,25 @@ class PaymentAPI {
       print("ERROR CARD DISPLAY: $e");
       print("$s");
       return;
+    }
+  }
+
+  // True once the backend has turned the preorder into an order.
+  Future<bool> orderPaid({required String reference}) async {
+    try {
+      final response = await http.get(
+        "${Network.api}/front/order/paid/$reference".toUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer $accesstoken",
+        },
+      );
+      debugPrint("ORDER PAID ${response.statusCode}: ${response.body}");
+      return response.statusCode == 200 &&
+          json.decode(response.body)["paid"] == true;
+    } catch (e) {
+      print("ERROR ORDER PAID: $e");
+      return false;
     }
   }
 }
